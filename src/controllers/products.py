@@ -1,26 +1,25 @@
 from flask_restx import Resource
 from src.server.instance import server
-from src.models.product import product
+from src.models.product import product_response, product_request
+from src.models.id import id_request
+from src.service.product import product_service
+
 app, api = server.app, server.api
-
-products_db = [
-    {
-        "id": 0, "title": "Test"
-    },
-    {
-        "id": 1, "title": "Test"
-    }
-]
-
 @api.route('/products')
 class ProductList(Resource):
-    @api.marshal_list_with(product)
+    @api.marshal_list_with(product_response)
     def get(self):
-        return products_db
+        products = product_service.get()
+        return products, 200
         
-    @api.expect(product, validate=True)
-    @api.marshal_list_with(product)
+    @api.expect(product_request, validate=True)
+    @api.marshal_list_with(product_request)
     def post(self):
-        response = api.payload
-        products_db.append(response)
-        return response, 200
+        product = product_service.post(api.payload)
+        return product, 201
+
+    @api.expect(id_request, validate=True)
+    @api.response(204, 'Product deleted')
+    def delete(self):
+        product = product_service.delete(api.payload['id'])
+        return product, 204
