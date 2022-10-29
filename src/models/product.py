@@ -18,3 +18,5 @@ product_request = server.api.model('ProductRequest',  {
 })
 
 product_response = server.api.inherit('ProductResponse', product_request, id)
+
+product_update_request = server.api.inherit('ProductUpdateResponse',  product_request, id)
