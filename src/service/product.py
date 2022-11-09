@@ -18,7 +18,16 @@ class Product():
         database.main[collection].insert_one(product)
         return product
 
+    def put(self, product):
+        myquery = { "_id":  ObjectId(product['id']) }
+        newvalues = { "$set": product}
+        return database.main[collection].update_one(myquery, newvalues) 
+
     def delete(self, id):
         database.main[collection].delete_one({"_id":  ObjectId(id)})
+    
+    def get_one(self, id):
+        return database.main[collection].find_one({"_id":  ObjectId(id)})
+    
 
 product_service = Product()
