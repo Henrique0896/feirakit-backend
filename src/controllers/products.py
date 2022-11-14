@@ -1,5 +1,3 @@
-from itertools import product
-from urllib import response
 from flask_restx import Resource
 from src.server.instance import server
 from src.models.product import product_response, product_request, product_update_request
@@ -8,7 +6,7 @@ from src.service.product import product_service
 
 app, api = server.app, server.api
 @api.route('/products')
-class ProductList(Resource):
+class Product(Resource):
     @api.marshal_list_with(product_response)
     def get(self):
         products = product_service.get()
@@ -31,3 +29,17 @@ class ProductList(Resource):
     def delete(self):
         product = product_service.delete(api.payload['id'])
         return product, 204
+
+@api.route('/products/<string:id>')
+class ProductSeachById(Resource):
+    @api.marshal_list_with(product_response)
+    def get(self, id):
+        products = product_service.get_one(id)
+        return products, 200
+
+@api.route('/products/byname/<string:name>')
+class ProductSeachByName(Resource):
+    @api.marshal_list_with(product_response)
+    def get(self, name):
+        products = product_service.get_products_by_name(name)
+        return products, 200

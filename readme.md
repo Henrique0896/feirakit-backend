@@ -20,6 +20,10 @@ virtualenv env
 ```shell
 source env/bin/activate
 ```
+##### Windows
+```shell
+venv\Scripts\activate
+```
 #### Install the system requirements
 ```shell
 pip install -r requirements.txt

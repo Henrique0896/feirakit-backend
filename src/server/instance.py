@@ -9,7 +9,7 @@ class Server():
          version='1.0',
          title='Feirakit API',
          description='',
-         doc='/docs'
+         doc='/swagger'
         )
     
     def run(self):
