@@ -4,14 +4,15 @@ from src.models.product import product_response, product_request, product_update
 from src.models.id import id_request
 from src.service.product import product_service
 
-app, api = server.app, server.api
-@api.route('/products')
+app, api = server.app, server.api.namespace('products',
+                                            description='Recurso de produtos')
+@api.route('')
 class Product(Resource):
     @api.marshal_list_with(product_response)
     def get(self):
         products = product_service.get()
         return products, 200
-        
+
     @api.expect(product_request, validate=True)
     @api.marshal_list_with(product_request)
     def post(self):
@@ -30,14 +31,14 @@ class Product(Resource):
         product = product_service.delete(api.payload['id'])
         return product, 204
 
-@api.route('/products/<string:id>')
+@api.route('/<string:id>')
 class ProductSeachById(Resource):
     @api.marshal_list_with(product_response)
     def get(self, id):
         products = product_service.get_one(id)
         return products, 200
-
-@api.route('/products/byname/<string:name>')
+        
+@api.route('/byname/<string:name>')
 class ProductSeachByName(Resource):
     @api.marshal_list_with(product_response)
     def get(self, name):
