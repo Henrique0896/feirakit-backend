@@ -11,7 +11,7 @@ class Product(Common):
         
     def post(self, product):
         database.main[collection].insert_one(product)
-        return product
+        return self.entity_response(product)
 
     def put(self, product):
         my_query = { "_id":  ObjectId(product['id']) }
