@@ -4,8 +4,7 @@ from src.models.product import product_response, product_request, product_update
 from src.models.id import id_request
 from src.service.product import product_service
 
-app, api = server.app, server.api.namespace('products',
-                                            description='Recurso de produtos')
+app, api = server.app, server.api.namespace('products',description='Recurso de produtos')
 @api.route('')
 class Product(Resource):
     @api.marshal_list_with(product_response)
