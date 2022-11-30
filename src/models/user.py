@@ -10,5 +10,4 @@ user_request = server.api.model('ProductRequest',  {
 })
 
 user_response = server.api.inherit('UserResponse', user_request, id)
-
 user_update_request = server.api.inherit('userUpdateRequest',  user_request, id)
