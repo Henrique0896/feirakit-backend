@@ -4,6 +4,7 @@ from src.models.id import id
 from src.models.enums import unidade_enum, avaliacao_enum, categoria_enum
 
 product_request = server.api.model('Product',  {
+    'nome_usuario': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do usuario'),
     'nome': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do produto'),
     'categoria': fields.String(required=True, enum=categoria_enum, description='Tipo de produto'),
     'descricao': fields.String(required=True, min_Length=1, max_Length=200, description='Descrição do produto'),
@@ -15,10 +16,10 @@ product_request = server.api.model('Product',  {
     'desconto': fields.Integer(description='Porcentagem de desconto'),
     'avaliacao': fields.String(enum=avaliacao_enum, description='Avaliação dos clientes'),
     'comentarios': fields.String(description='Comentarios sobre o produto'),
-    'imagem_url': fields.String(description='Link para acessar imagem')
+    'preco': fields.Integer(description='valor do produto'),
+    'imagem_url': fields.List(fields.String)
 })
 
 product_response = server.api.inherit('ProductResponse', product_request, id)
 
-product_update_request = server.api.inherit(
-    'ProductUpdateRequest',  product_request, id)
+product_update_request = server.api.inherit('ProductUpdateRequest',  product_request, id)

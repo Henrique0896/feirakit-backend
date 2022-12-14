@@ -43,3 +43,10 @@ class ProductSeachByName(Resource):
     def get(self, name):
         products = product_service.get_products_by_name(name)
         return products, 200
+
+@api.route('/bynameUsuario/<string:nameUsuario>')
+class ProductSeachByNameOfUsuario(Resource):
+    @api.marshal_list_with(product_response)
+    def get(self, nameUsuario):
+        products = product_service.get_products_by_name_usuario(nameUsuario)
+        return products, 200

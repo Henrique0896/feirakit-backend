@@ -4,7 +4,7 @@ from src.models.id import id_request
 from src.models.kit import kit_response, kit_request, kit_update_request
 from src.service.kit import kit_service
 
-app, api = server.app, server.api.namespace('kits', description='Recurso de usuários')
+app, api = server.app, server.api.namespace('kits', description='kits')
 @api.route('')
 class kit(Resource):
     @api.marshal_list_with(kit_response)
