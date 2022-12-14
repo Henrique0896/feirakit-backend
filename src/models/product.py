@@ -1,7 +1,8 @@
-from flask_restx import fields
+from flask_restx import fields, marshal
 from src.server.instance import server
 from src.models.id import id
 from src.models.enums import unidade_enum, avaliacao_enum, categoria_enum
+import json
 
 product_request = server.api.model('Product',  {
     'nome_usuario': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do usuario'),
@@ -19,7 +20,6 @@ product_request = server.api.model('Product',  {
     'preco': fields.Integer(description='valor do produto'),
     'imagem_url': fields.List(fields.String)
 })
-
 product_response = server.api.inherit('ProductResponse', product_request, id)
 
 product_update_request = server.api.inherit('ProductUpdateRequest',  product_request, id)
