@@ -3,7 +3,7 @@ from src.server.instance import server
 from src.models.product import product_response, product_request, product_update_request
 from src.models.id import id_request
 from src.service.product import product_service
-from flask_restx import marshal
+#from flask_restx import marshal
 
 app, api = server.app, server.api.namespace('products',description='Recurso de produtos')
 @api.route('')

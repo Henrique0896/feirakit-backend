@@ -16,10 +16,11 @@ product_request = server.api.model('Product',  {
     'validade': fields.Date(required=True, description='Validade do produto'),
     'desconto': fields.Integer(description='Porcentagem de desconto'),
     'avaliacao': fields.String(enum=avaliacao_enum, description='Avaliação dos clientes'),
-    'comentarios': fields.String(description='Comentarios sobre o produto'),
+    'comentarios': fields.List(fields.String),
+    'imagem_url': fields.List(fields.String),
     'preco': fields.Integer(description='valor do produto'),
-    'imagem_url': fields.List(fields.String)
 })
+
 product_response = server.api.inherit('ProductResponse', product_request, id)
 
 product_update_request = server.api.inherit('ProductUpdateRequest',  product_request, id)
