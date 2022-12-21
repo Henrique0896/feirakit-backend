@@ -30,8 +30,8 @@ class Product(Common):
         products = list(database.main[collection].find({"nome": name}))
         return self.entity_response_list(products)
 
-    def get_products_by_name_usuario(self, nameUsuario):
-        products = list(database.main[collection].find({"nome_usuario": nameUsuario}))
+    def get_products_by_id_produtor(self, idProdutor):
+        products = list(database.main[collection].find({"id_produtor": idProdutor}))
         return self.entity_response_list(products)
 
 product_service = Product()
