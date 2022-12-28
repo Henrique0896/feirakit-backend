@@ -27,7 +27,7 @@ class Product(Common):
         return self.entity_response(product)
 
     def get_products_by_name(self, name):
-        products = list(database.main[collection].find({"nome": name}))
+        products = list(database.main[collection].find({"nome":{'$regex': name}}))
         return self.entity_response_list(products)
 
     def get_products_by_id_produtor(self, idProdutor):

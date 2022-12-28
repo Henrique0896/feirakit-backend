@@ -6,17 +6,17 @@ from src.models.enums import unidade_enum, categoria_enum
 
 product_request = server.api.model('Product',  {
     'id_produtor': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do usuario'),
+    'produtor': fields.String(required=True, min_Length=1, max_Length=50, description='Nome produtor'),
     'nome': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do produto'),
     'categoria': fields.String(required=True, enum=categoria_enum, description='Tipo de produto'),
     'descricao': fields.String(required=True, min_Length=1, max_Length=200, description='Descrição do produto'),
     'unidade': fields.String(required=True, enum=unidade_enum, description='Unidade do produto'),
     'estoque': fields.Integer(required=True, description='Quantidade no estoque'),
-    'produtor': fields.String(required=True, min_Length=1, max_Length=50, description='Nome produtor'),
     'bestbefore': fields.Boolean(required=True, description='Produto colhido após a compra'),
     'validade': fields.Date(required=True, description='Validade do produto'),
     'desconto': fields.Integer(description='Porcentagem de desconto'),   
     'imagem_url': fields.List(fields.String),
-    'preco': fields.Integer(description='valor do produto'),
+    'preco': fields.Float(description='valor do produto'),
 })
 
 product_response = server.api.inherit('ProductResponse', product_request, id)
