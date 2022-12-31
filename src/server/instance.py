@@ -16,7 +16,7 @@ class Server():
     def run(self):
         self.app.run(
             debug=True,
-            host='192.168.1.37', port=5000
+            host='0.0.0.0', port=5000
         )
 
 server = Server()
