@@ -3,7 +3,6 @@ from src.server.instance import server
 from src.models.product import product_response, product_request, product_update_request
 from src.models.id import id_request
 from src.service.product import product_service
-#from flask_restx import marshal
 
 app, api = server.app, server.api.namespace('products',description='Recurso de produtos')
 @api.route('')
@@ -45,9 +44,9 @@ class ProductSeachByName(Resource):
         products = product_service.get_products_by_name(name)
         return products, 200
 
-@api.route('/bynameUsuario/<string:nameUsuario>')
+@api.route('/by-id-usuario/<string:id_usuario>')
 class ProductSeachByNameOfUsuario(Resource):
     @api.marshal_list_with(product_response)
-    def get(self, nameUsuario):
-        products = product_service.get_products_by_name_usuario(nameUsuario)
+    def get(self, id_usuario):
+        products = product_service.get_products_by_id_usuario(id_usuario)
         return products, 200

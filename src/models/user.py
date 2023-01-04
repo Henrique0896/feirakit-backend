@@ -3,7 +3,7 @@ from src.server.instance import server
 from src.models.id import id
 
 user_request = server.api.model('UserRequest',  {
-    'nome_completo': fields.String(required=True, min_Length=3, max_Length=200, description='Nome do usuário'),
+    'nome': fields.String(required=True, min_Length=3, max_Length=200, description='Nome completo do usuário'),
     'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email'),
     'telefone': fields.String(required=True, min_Length=6, max_Length=20, description='Telefone'),
     'endereco': fields.String(required=True, min_Length=10, max_Length=200, description='Endereço (CEP, rua, numero, complemento, bairro, cidade, estado)'),
