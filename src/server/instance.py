@@ -5,7 +5,7 @@ class Server():
     def __init__(self):
         self.app = Flask(__name__)
         self.app.config.setdefault("RESTX_MASK_SWAGGER", False)
-        self.app.config['SECRET_KEY'] = 'SECRET_KEY'
+        self.app.config['SECRET_KEY'] = 'key'
         self.api = Api(self.app,
          version='1.0',
          title='Feirakit API',
@@ -15,7 +15,8 @@ class Server():
     
     def run(self):
         self.app.run(
-            debug=True
+            debug=True,
+            host='0.0.0.0', port=5000
         )
 
 server = Server()

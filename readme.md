@@ -8,19 +8,15 @@ Squad Vale
 ### Settings
 
 #### Install these packages, case you don't already have it
+Download python 3 then:
 ```shell
-sudo apt-get install python3-pip
-sudo pip3 install virtualenv 
+pip install virtualenv
 ```
 #### Create the Virtual Environment
 ```shell
-virtualenv env
+virtualenv venv
 ```
 #### Activate it
-```shell
-source env/bin/activate
-```
-##### Windows
 ```shell
 venv\Scripts\activate
 ```
@@ -30,6 +26,6 @@ pip install -r requirements.txt
 ```
 #### Run the project
 ```shell
-python main.py
+py main.py
 ```
 </br>
