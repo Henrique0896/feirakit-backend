@@ -9,38 +9,38 @@ app, api = server.app, server.api.namespace('users',
 @api.route('')
 class User(Resource):
     @api.marshal_list_with(user_response)
-    def get(self):
-        users = user_service.get()
+    async def get(self):
+        users = await user_service.get()
         return users, 200
     
     @api.expect(user_request, validate=True)
     @api.marshal_with(user_response)
-    def post(self):
-        user = user_service.post(api.payload)
+    async def post(self):
+        user = await user_service.post(api.payload)
         return user, 201
     
     @api.expect(user_update_request, validate=True)
     @api.marshal_with(user_response)
-    def put(self):
-        response = user_service.put(api.payload)
+    async def put(self):
+        response = await user_service.put(api.payload)
         return response, 204
 
     @api.expect(id_request, validate=True)
     @api.response(204, 'User deleted')
-    def delete(self):
-        response = user_service.delete(api.payload['id'])
+    async def delete(self):
+        response = await user_service.delete(api.payload['id'])
         return response, 204
     
 @api.route('/<string:id>')
 class UserSeachById(Resource):
     @api.marshal_list_with(user_response)
-    def get(self, id):
-        user = user_service.get_one(id)
+    async def get(self, id):
+        user = await user_service.get_one(id)
         return user, 200
         
 @api.route('/byname/<string:name>')
 class UserSeachByName(Resource):
     @api.marshal_list_with(user_response)
-    def get(self, name):
-        users = user_service.get_users_by_name(name)
+    async def get(self, name):
+        users = await user_service.get_users_by_name(name)
         return users, 200
