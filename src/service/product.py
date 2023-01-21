@@ -1,6 +1,7 @@
 from src.server.database import database
 from bson import  ObjectId
 from src.service.common import Common
+from src.models.enums import unidade_enum, categoria_enum
 
 collection = 'product'
 
@@ -30,8 +31,21 @@ class Product(Common):
         products = list(database.main[collection].find({"nome":{'$regex': name}}))
         return self.entity_response_list(products)
 
-    def get_products_by_id_produtor(self, idProdutor):
-        products = list(database.main[collection].find({"id_produtor": idProdutor}))
+    def get_products_by_id_usuario(self, id_usuario):
+        products = list(database.main[collection].find({"produtor_id": id_usuario}))
         return self.entity_response_list(products)
+
+    def get_products_by_unidade(self, unity):
+        products = list(database.main[collection].find({"unidade":{'$regex': unity}}))
+        return self.entity_response_list(products)
+
+    def get_products_by_categoria(self, category):
+        products = list(database.main[collection].find({"categoria":{'$regex': category}}))
+        return self.entity_response_list(products)
+
+    def get_product_types(self):
+        return {'unidades': unidade_enum,
+                'categorias': categoria_enum
+        }
 
 product_service = Product()
