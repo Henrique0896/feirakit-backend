@@ -27,7 +27,7 @@ class User(Common):
         return self.entity_response(user)
 
     def get_users_by_name(self, name):
-        users = list(database.main[collection].find({"nome_completo": name}))
+        users = list(database.main[collection].find({"nome": name}))
         return self.entity_response_list(users)
 
 

@@ -8,7 +8,8 @@ endereco = server.api.model('Endereco', {
  'bairro': fields.String(required=True, min_Length=3, max_Length=200, description='Bairro'),
  'cep': fields.String(required=True, min_Length=8, max_Length=8, description='CEP'),
  'complemento': fields.String(required=True, min_Length=3, max_Length=200, description='Complemento'),
- 'cidade': fields.String(required=True, min_Length=3, max_Length=200, description='Cidade')  
+ 'cidade': fields.String(required=True, min_Length=3, max_Length=200, description='Cidade'),
+ 'estado': fields.String(required=True, min_Length=3, max_Length=200, description='Estado')
 })
 
 user_request = server.api.model('UserRequest',  {
