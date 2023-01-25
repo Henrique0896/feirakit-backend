@@ -35,10 +35,6 @@ class Product(Common):
         products = list(database.main[collection].find({"produtor_id": id_usuario}))
         return self.entity_response_list(products)
 
-    def get_products_by_unidade(self, unity):
-        products = list(database.main[collection].find({"unidade":{'$regex': unity}}))
-        return self.entity_response_list(products)
-
     def get_products_by_categoria(self, category):
         products = list(database.main[collection].find({"categoria":{'$regex': category}}))
         return self.entity_response_list(products)
