@@ -12,6 +12,7 @@ class User(Common):
     def post(self, user):
         database.main[collection].insert_one(user)
         return self.entity_response(user)
+        
     
     def put(self, user):
         my_query = { "_id":  ObjectId(user['id']) }
