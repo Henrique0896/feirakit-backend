@@ -1,5 +1,5 @@
 from flask_restx import Resource
-from src.server.instance import server
+from src.program.instance import server
 from src.models.product import product_response, product_request, product_update_request
 from src.models.id import id_request
 from src.service.product import product_service

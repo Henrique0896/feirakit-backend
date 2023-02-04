@@ -1,5 +1,5 @@
 from flask_restx import fields
-from src.server.instance import server
+from src.program.instance import server
 from src.models.id import id
 
 endereco = server.api.model('Endereco', {

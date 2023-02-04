@@ -5,5 +5,4 @@ class Database():
         self.client = MongoClient('link')
         self.main = self.client['feirakit-database']
         
-
 database = Database()
