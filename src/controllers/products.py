@@ -39,7 +39,7 @@ class ProductSeachById(Resource):
         products = product_service.get_one(id)
         return products, 200
  
-@api.route('/byidusuario/<string:email_usuario>')
+@api.route('/byEmailusuario/<string:email_usuario>')
 class ProductSeachByEmailOfUsuario(Resource):
     @api.marshal_list_with(product_response)
     def get(self, email_usuario):

@@ -5,7 +5,6 @@ from src.service.common import Common
 collection = 'user'
 
 class User(Common):
-    erro = False
     def get(self):
         users = list(database.main[collection].find())
         return self.entity_response_list(users)
@@ -15,7 +14,6 @@ class User(Common):
         if(database.main[collection].find_one({"email": email_user}) != None):
             mensagem_erro = 'erro ja existe um usuario com esse email'
             return mensagem_erro
-            erro = True
             
         else:
             database.main[collection].insert_one(user)
@@ -37,6 +35,10 @@ class User(Common):
 
     def get_users_by_name(self, name):
         users = list(database.main[collection].find({"nome": name}))
+        return self.entity_response_list(users)
+
+    def get_users_by_email(self, email_user):
+        users = list(database.main[collection].find({"email": email_user}))
         return self.entity_response_list(users)
 
 user_service = User()
