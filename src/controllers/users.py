@@ -1,6 +1,6 @@
 from flask_restx import Resource
 from src.program.instance import server
-from src.models.user import user_response, user_request, user_update_request
+from src.models.user import user_response, user_request, user_update_request, check_password_request, change_password_request, response_default
 from src.models.id import id_request
 from src.service.user import user_service
 
@@ -44,3 +44,20 @@ class UserSeachByName(Resource):
     def get(self, name):
         users = user_service.get_users_by_name(name)
         return users, 200
+
+@api.route('/check-password')
+class CheckPassword(Resource):
+    @api.expect(check_password_request, validate=True)
+    @api.marshal_with(response_default)
+    def post(self):
+        valid_password = user_service.verify_password(api.payload['email'], api.payload['senha'])
+        return valid_password, 200
+
+@api.route('/change-password')
+class ChangePassword(Resource):
+    @api.expect(change_password_request, validate=True)
+    @api.marshal_with(response_default)
+    def post(self):
+        valid_password = user_service.change_password(api.payload['email'], api.payload['senha'], api.payload['nova_senha'])
+        return valid_password, 200
+    

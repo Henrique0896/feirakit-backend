@@ -15,24 +15,24 @@ class Product(Common):
         return self.entity_response(product)
 
     def put(self, product):
-        my_query = { "_id":  ObjectId(product['id']) }
-        del product["id"]
-        new_values = { "$set": product}
+        my_query = { '_id':  ObjectId(product['id']) }
+        del product['id']
+        new_values = { '$set': product}
         return database.main[collection].update_one(my_query, new_values) 
 
     def delete(self, id):
-        database.main[collection].delete_one({"_id":  ObjectId(id)})
+        database.main[collection].delete_one({'_id':  ObjectId(id)})
     
     def get_one(self, id):
-        product = database.main[collection].find_one({"_id":  ObjectId(id)})
+        product = database.main[collection].find_one({'_id':  ObjectId(id)})
         return self.entity_response(product)
 
     def get_products_by_name(self, name):
-        products = list(database.main[collection].find({"nome":{'$regex': name}}))
+        products = list(database.main[collection].find({'nome':{'$regex': name}}))
         return self.entity_response_list(products)
 
     def get_products_by_id_usuario(self, id_usuario):
-        products = list(database.main[collection].find({"produtor_id": id_usuario}))
+        products = list(database.main[collection].find({'produtor_id': id_usuario}))
         return self.entity_response_list(products)
     
     def get_product_types(self):

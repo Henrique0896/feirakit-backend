@@ -19,5 +19,31 @@ user_request = server.api.model('UserRequest',  {
     'endereco': fields.Nested(endereco)
 })
 
-user_response = server.api.inherit('UserResponse', user_request, id)
-user_update_request = server.api.inherit('userUpdateRequest',  user_request, id)
+user_response = server.api.inherit('UserResponse', server.api.model('UserUserResponseProps',  {
+    'nome': fields.String(required=True, min_Length=3, max_Length=200, description='Nome completo do usuário'),
+    'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email'),
+    'telefone': fields.String(required=True, min_Length=6, max_Length=20, description='Telefone'),
+    'endereco': fields.Nested(endereco)
+}), id)
+
+user_update_request = server.api.inherit('userUpdateRequest',  server.api.model('userUpdateRequestProps',  {
+    'nome': fields.String(required=True, min_Length=3, max_Length=200, description='Nome completo do usuário'),
+    'telefone': fields.String(required=True, min_Length=6, max_Length=20, description='Telefone'),
+    'endereco': fields.Nested(endereco)
+}), id)
+
+check_password_request = server.api.model('checkPasswordRequest',  {
+    'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email'),
+    'senha': fields.String(required=True, min_Length=4, max_Length=200, description='Senha a ser verificada'),
+})
+
+response_default = server.api.model('responseDefault',  {
+    'resultado': fields.Boolean(),
+    'mensagem': fields.String(),
+})
+
+change_password_request = server.api.model('changePasswordRequest',  {
+    'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email'),
+    'senha': fields.String(required=True, min_Length=4, max_Length=200, description='Senha antiga'),
+    'nova_senha': fields.String(required=True, min_Length=4, max_Length=200, description='Nova senha'),
+})

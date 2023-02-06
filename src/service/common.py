@@ -9,7 +9,7 @@ class Common():
     def entity_response_list(self, entities):
         new_entities = []
         for entity in entities:
-            entity["id"] = self.get_id(entity)
+            entity['id'] = self.get_id(entity)
             new_entities.append(entity)
         return new_entities
     
