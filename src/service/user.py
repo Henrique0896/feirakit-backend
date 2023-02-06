@@ -8,13 +8,21 @@ collection = 'user'
 class User(Common):
     def get(self):
         users = list(database.main[collection].find())
-        return self.entity_response_list(users)
-        
+        if not users:
+            return {'resultado': None,
+                'mensagem': 'Erro ao buscar usuários'}
+        return {'resultado': users,
+                'mensagem': 'Usuários retornados com sucesso'}
+
     def post(self, user):
+        if(database.main[collection].find_one({"email": user['email']}) != None):
+            return {'resultado': False,
+                    'mensagem': 'Erro ao criar usuário. Já existe um usuário com esse email'}
         user['senha'] = generate_password_hash(user['senha'])
         database.main[collection].insert_one(user)
-        return self.entity_response(user)
-    
+        return {'resultado': True,
+                'mensagem': 'Usuário criado com sucesso'}
+                    
     def put(self, user):
         old_user = database.main[collection].find_one({'_id':  ObjectId(user['id'])})
         if not old_user:
@@ -66,8 +74,14 @@ class User(Common):
             return {'resultado': False,
                     'mensagem': 'Senha antiga é inválida'}
         return valid_old_password
+    
+    def get_users_by_email(self, email):
+        users = list(database.main[collection].find({"email": email}))
+        if not users:
+            return {'resultado': None,
+                'mensagem': 'Não foi possível buscar usuários'}
+        return {'resultado': self.entity_response_list(users),
+                'mensagem': 'Usuários retornados com sucesso'}
         
-
-
-
+    
 user_service = User()
