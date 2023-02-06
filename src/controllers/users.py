@@ -13,7 +13,7 @@ class User(Resource):
         return users, 200
     
     @api.expect(user_request, validate=True)
-    @api.marshal_with(user_response, user_service.erro)
+    @api.marshal_with(user_response)
     def post(self):
         user = user_service.post(api.payload)
         return user, 201
