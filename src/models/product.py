@@ -1,10 +1,10 @@
 from flask_restx import fields
-from src.server.instance import server
+from src.program.instance import server
 from src.models.id import id
 from src.models.enums import unidade_enum, categoria_enum
 
 product_request = server.api.model('Product',  {
-    'email_user': fields.String(required=True, min_Length=1, max_Length=200, description='email do usuario'),
+    'produtor_id': fields.String(required=True, min_Length=1, max_Length=200, description='Produtor'),
     'nome': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do produto'),
     'categoria': fields.String(required=True, enum=categoria_enum, description='Tipo de produto'),
     'descricao': fields.String(required=True, min_Length=1, max_Length=200, description='Descrição do produto'),
