@@ -11,7 +11,7 @@ class User(Common):
         if not users:
             return {'resultado': None,
                 'mensagem': 'Erro ao buscar usuários'}
-        return {'resultado': users,
+        return {'resultado': self.entity_response_list(users),
                 'mensagem': 'Usuários retornados com sucesso'}
 
     def post(self, user):

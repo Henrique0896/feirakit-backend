@@ -27,7 +27,7 @@ user_request = server.api.model('UserRequest',  {
 })
 
 user_response = server.api.model('UserResponse',  {
-    'resultado': fields.List(fields.Nested(user)),
+    'resultado': fields.List(fields.Nested(server.api.inherit('userResponse',  user, id))),
     'mensagem': fields.String(),
 })
 
