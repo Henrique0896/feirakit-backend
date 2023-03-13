@@ -6,8 +6,9 @@ from src.models.enums import unidade_enum, categoria_enum
 collection = 'product'
 
 class Product(Common):
-    def get(self):
-        products = list(database.main[collection].find())
+    def get(self,page,limit,sort):
+        skip = limit * (page - 1)
+        products = list(database.main[collection].find().skip(skip).limit(limit).sort('_id',sort))
         return self.entity_response_list(products)
         
     def post(self, product):
@@ -26,7 +27,7 @@ class Product(Common):
     def get_one(self, id):
         product = database.main[collection].find_one({'_id':  ObjectId(id)})
         return self.entity_response(product)
-
+    
     def get_products_by_name(self, name):
         products = list(database.main[collection].find({'nome':{'$regex': name}}))
         return self.entity_response_list(products)
