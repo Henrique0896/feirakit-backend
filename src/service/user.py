@@ -43,14 +43,13 @@ class User(Common):
 
     def get_one(self, id):
         user = database.main[collection].find_one({'_id':  ObjectId(id)})
-        return {'resultado':self.entity_response(user),
-                'mensagem': 'Usuário encontrado sucesso'}
-        
+        return {'resultado': self.entity_response(user),
+                    'mensagem': 'Usuário retornado com sucesso'}
 
     def get_users_by_name(self, name):
-        users = database.main[collection].find({'nome': name})
-        return {'resultado':self.entity_response(users),
-                'mensagem': 'Usuário encontrado sucesso'}
+        users = list(database.main[collection].find({'nome': name}))
+        return {'resultado': self.entity_response_list(users),
+                    'mensagem': 'Usuários retornados com sucesso'}
     
     def verify_password(self, email, password):
         user = database.main[collection].find_one({'email':  email})
