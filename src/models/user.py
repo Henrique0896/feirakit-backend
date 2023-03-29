@@ -9,7 +9,7 @@ address = server.api.model('Address', {
  'cep': fields.String(required=True, min_Length=8, max_Length=8, description='CEP'),
  'complemento': fields.String(required=True, min_Length=3, max_Length=200, description='Complemento'),
  'cidade': fields.String(required=True, min_Length=3, max_Length=200, description='Cidade'),
- 'estado': fields.String(required=True, min_Length=3, max_Length=200, description='Estado')
+  'estado': fields.String(required=True, min_Length=3, max_Length=200, description='Estado')
 })
 
 user = server.api.model('User', {
@@ -20,7 +20,7 @@ user = server.api.model('User', {
 })
 
 user_request = server.api.model('UserRequest',  {
-    'nome': fields.String(required=True, min_Length=3, max_Length=200, description='Nome do usuário'),
+    'nome': fields.String(required=True, min_Length=3, max_Length=200, description='Nome completo do usuário'),
     'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email'),
     'telefone': fields.String(required=True, min_Length=6, max_Length=20, description='Telefone'),
     'senha': fields.String(required=True, min_Length=4, max_Length=200, description='Senha'),
@@ -28,7 +28,7 @@ user_request = server.api.model('UserRequest',  {
 })
 
 user_response = server.api.model('UserResponse',  {
-    'resultado': fields.List(fields.Nested(user)),
+    'resultado': fields.List(fields.Nested(server.api.inherit('userResponse',  user, id))),
     'mensagem': fields.String(),
 })
 

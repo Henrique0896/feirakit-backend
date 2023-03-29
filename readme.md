@@ -11,6 +11,8 @@ Squad Vale
 Download python 3 then:
 ```shell
 pip install virtualenv
+        or
+py install virtualenv
 ```
 #### Create the Virtual Environment
 ```shell
