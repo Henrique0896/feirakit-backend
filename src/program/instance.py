@@ -1,11 +1,11 @@
 from flask import Flask
 from flask_restx import Api
-import os
+
 class Server():
     def __init__(self):
         self.app = Flask(__name__)
         self.app.config.setdefault("RESTX_MASK_SWAGGER", False)
-        self.app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+        self.app.config['SECRET_KEY'] = ['secret key']
         self.api = Api(self.app,
          version='1.0',
          title='Feirakit API',

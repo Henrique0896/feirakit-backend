@@ -8,7 +8,8 @@ address = server.api.model('Address', {
  'bairro': fields.String(required=True, min_Length=3, max_Length=200, description='Bairro'),
  'cep': fields.String(required=True, min_Length=8, max_Length=8, description='CEP'),
  'complemento': fields.String(required=True, min_Length=3, max_Length=200, description='Complemento'),
- 'cidade': fields.String(required=True, min_Length=3, max_Length=200, description='Cidade')  
+ 'cidade': fields.String(required=True, min_Length=3, max_Length=200, description='Cidade'),
+ 'estado': fields.String(required=True, min_Length=1, max_Length=3, description='estado'),   
 })
 
 user = server.api.model('User', {

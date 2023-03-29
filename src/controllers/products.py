@@ -4,13 +4,19 @@ from src.models.product import product_response, product_request, product_update
 from src.models.id import id_request
 from src.service.product import product_service
 from src.models.product_types import types_response
+from flask import request
+
 
 app, api = server.app, server.api.namespace('products',description='Recurso de produtos')
 @api.route('')
 class Product(Resource):
     @api.marshal_list_with(product_response)
+    @api.doc(params={'page': 'Index of page','limit':'Quantity of products by request','sort':'order of results (1=asc / -1= dec)'})
     def get(self):
-        products = product_service.get()
+        page= request.args.get('page',type=int,default=1)
+        limit= request.args.get('limit',type=int ,default=10)
+        sort= request.args.get('sort',type=int ,default=1)
+        products = product_service.get(page,limit,sort)
         return products, 200
 
     @api.expect(product_request, validate=True)
