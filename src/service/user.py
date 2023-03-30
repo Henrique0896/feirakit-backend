@@ -33,7 +33,10 @@ class User(Common):
         updated_user['endereco'] = user['endereco']
         my_query = { '_id':  ObjectId(user['id']) }
         new_values = { '$set': updated_user}
-        return database.main[collection].update_one(my_query, new_values) 
+        database.main[collection].update_one(my_query, new_values)
+        return {'resultado': self.entity_response(updated_user),
+                'mensagem': 'Usuário alterado com sucesso'}
+         
 
     def delete(self, id):
         user = database.main[collection].find_one({'_id':  ObjectId(id)})
