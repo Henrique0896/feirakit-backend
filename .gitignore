@@ -19,6 +19,7 @@ docs/_build/
 .vscode
 info.txt
 .env
+
 # Coverage reports
 htmlcov/
 .coverage
