@@ -1,8 +1,8 @@
 from flask_restx import Resource
 from src.program.instance import server
-from src.models.user import user_response, user_request, user_update_request, check_password_request, change_password_request, response_default, user_create_response
-from src.models.id import id_request
-from src.service.user import user_service
+from src.models.users import user_response, user_request, user_update_request, check_password_request, change_password_request, response_default, user_create_response
+from src.models.ids import id_request
+from src.service.users import user_service
 
 app, api = server.app, server.api.namespace('users', description='Recurso de usuários')
 @api.route('')
@@ -16,19 +16,20 @@ class User(Resource):
     @api.marshal_with(user_create_response)
     def post(self):
         user = user_service.post(api.payload)
-        return user, 201
-    
+        return users, 202
+
     @api.expect(user_update_request, validate=True)
     @api.marshal_with(user_response)
     def put(self):
         response = user_service.put(api.payload)
-        return response, 204
+        return response, 204 
 
     @api.expect(id_request, validate=True)
     @api.response(204, 'User deleted')
     def delete(self):
         response = user_service.delete(api.payload['id'])
         return response, 204
+        
     
 @api.route('/<string:id>')
 class UserSeachById(Resource):
@@ -36,6 +37,7 @@ class UserSeachById(Resource):
     def get(self, id):
         user = user_service.get_one(id)
         return user, 200
+
 
 @api.route('/byemail/<string:email>')
 class UserSeachByEmail(Resource):
@@ -58,6 +60,7 @@ class CheckPassword(Resource):
     def post(self):
         valid_password = user_service.verify_password(api.payload['email'], api.payload['senha'])
         return valid_password, 200
+       
 
 @api.route('/change-password')
 class ChangePassword(Resource):

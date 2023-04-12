@@ -1,8 +1,8 @@
 from flask_restx import Resource
 from src.program.instance import server
-from src.models.product import product_response, product_request, product_update_request
-from src.models.id import id_request
-from src.service.product import product_service
+from src.models.products import product_response, product_request, product_update_request
+from src.models.ids import id_request
+from src.service.products import product_service
 from src.models.product_types import types_response
 
 app, api = server.app, server.api.namespace('products',description='Recurso de produtos')
@@ -37,13 +37,6 @@ class ProductSeachById(Resource):
     def get(self, id):
         products = product_service.get_one(id)
         return products, 200
- 
-@api.route('/byEmailusuario/<string:email_usuario>')
-class ProductSeachByEmailOfUsuario(Resource):
-    @api.marshal_list_with(product_response)
-    def get(self, email_usuario):
-        products = product_service.get_products_by_email_usuario(email_usuario)
-        return products, 200
 
 @api.route('/byname/<string:name>')
 class ProductSeachByName(Resource):
@@ -52,11 +45,11 @@ class ProductSeachByName(Resource):
         products = product_service.get_products_by_name(name)
         return products, 200
 
-@api.route('/by-id-usuario/<string:id_usuario>')
-class ProductSeachByNameOfUsuario(Resource):
+@api.route('/by-id-user/<string:id_user>')
+class ProductSeachByNameOfUser(Resource):
     @api.marshal_list_with(product_response)
-    def get(self, id_usuario):
-        products = product_service.get_products_by_id_usuario(id_usuario)
+    def get(self, id_user):
+        products = product_service.get_products_by_id_user(id_user)
         return products, 200
 
 @api.route('/units')
