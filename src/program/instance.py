@@ -14,7 +14,14 @@ class Server():
                        version='1.0',
                        title='Feirakit API',
                        description='',
-                       doc='/swagger'
+                       doc='/swagger',
+                       authorizations={
+                             'Authorization': {
+                                 'type': 'apiKey',
+                                 'in': 'header',
+                                 'name': 'Authorization'
+                             }
+                       }
                        )
 
     def run(self):
