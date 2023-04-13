@@ -4,6 +4,7 @@ from src.models.product import product_response, product_request, product_update
 from src.models.id import id_request
 from src.service.product import product_service
 from src.models.product_types import types_response
+from src.controllers.authenticate import jwt_required
 from flask import request
 
 
@@ -20,21 +21,26 @@ class Product(Resource):
         return products, 200
 
     @api.expect(product_request, validate=True)
+    @jwt_required
     @api.marshal_list_with(product_request)
-    def post(self):
+    @api.doc(security='apikey')
+    def post(self,current_user):
         product = product_service.post(api.payload)
         return product, 201
 
     @api.expect(product_update_request)
+    @jwt_required
     @api.marshal_with(product_response)
-    def put(self):
+    def put(self,current_user):
         response = product_service.put(api.payload)
         return response, 204
 
     @api.expect(id_request, validate=True)
+    @jwt_required
     @api.response(204, 'Product deleted')
-    def delete(self):
-        product = product_service.delete(api.payload['id'])
+    @api.doc(security='apikey')
+    def delete(self,current_user):
+        product = product_service.delete(api.payload['id'],current_user)
         return product, 204
 
 @api.route('/<string:id>')

@@ -2,6 +2,11 @@ from src.program.database import database
 from bson import  ObjectId
 from src.service.common import Common
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
+import jwt
+import dotenv
+
+dotenv.load_dotenv(dotenv.find_dotenv())
 
 collection = 'user'
 
@@ -23,10 +28,14 @@ class User(Common):
         return {'resultado': True,
                 'mensagem': 'Usuário criado com sucesso'}
                     
-    def put(self, user):
+    def put(self, user,current_user):
         old_user = database.main[collection].find_one({'_id':  ObjectId(user['id'])})
+        
         if not old_user:
             return "Erro ao atualizar usuário. Não foi possível encontrar um usuário pelo id: {}.".format(user['id'])
+        if old_user['id']!=current_user['id']:
+            return "Erro ao atualizar usuário. Estas informações pertencem à outro usuário."
+
         updated_user = old_user
         updated_user['nome'] = user['nome']
         updated_user['telefone'] = user['telefone']
@@ -35,10 +44,13 @@ class User(Common):
         new_values = { '$set': updated_user}
         return database.main[collection].update_one(my_query, new_values) 
 
-    def delete(self, id):
+    def delete(self, id,current_user):
         user = database.main[collection].find_one({'_id':  ObjectId(id)})
         if not user:
             return "Erro ao apagar usuário. Não foi possível encontrar um usuário pelo id: {}.".format(user['id'])
+        if user['id']!=current_user['id']:
+            return "Erro ao apagar usuário. Estas informações pertencem à outro usuário"
+       
         database.main[collection].delete_one({'_id':  ObjectId(id)})
 
     def get_one(self, id):
@@ -55,23 +67,39 @@ class User(Common):
         user = database.main[collection].find_one({'email':  email})
         if not user:
             return {'resultado': False,
+                    'token':'null',
                     'mensagem': 'Email não cadastrado'}
         if not check_password_hash(user['senha'], password):
             return {'resultado': False,
+                    'token':'null',
                     'mensagem': 'Senha inválida'}
+        payload={
+           "id":str(user['_id']),
+           "nome": user['nome']
+        }
+
+        secret=os.getenv("SECRET_KEY")
+        token=jwt.encode(payload,secret)
+
         return {'resultado': True,
+                'token':token,
                 'mensagem': 'Senha verificada'}
     
-    def change_password(self, email, old_password, new_password):
+    def change_password(self, email, old_password, new_password,current_user):
         valid_old_password = self.verify_password(email, old_password)
         if valid_old_password['resultado']:
             user = database.main[collection].find_one({'email':  email})
+            if user['id'] != current_user['id']:
+                 return {'resultado': False,
+                         'mensagem': 'Você não tem permissão para alterar este dado'}
+
             user['senha'] = generate_password_hash(new_password)
             my_query = { 'email':  email }
             new_values = { '$set': user}
             database.main[collection].update_one(my_query, new_values)
             return {'resultado': True,
                     'mensagem': 'Senha alterada com sucesso'}
+        
         if valid_old_password['mensagem'] == 'Senha inválida':
             return {'resultado': False,
                     'mensagem': 'Senha antiga é inválida'}
