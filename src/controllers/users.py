@@ -3,9 +3,10 @@ from src.program.instance import server
 from src.models.user import user_response, user_request, user_update_request, check_password_request, change_password_request, response_default, user_create_response
 from src.models.id import id_request
 from src.service.user import user_service
-
+from src.controllers.authenticate import jwt_required
 app, api = server.app, server.api.namespace('users',
                                             description='Recurso de usuários')
+
 @api.route('')
 class User(Resource):
     @api.marshal_with(user_response)
@@ -20,15 +21,20 @@ class User(Resource):
         return user, 201
     
     @api.expect(user_update_request, validate=True)
+    @jwt_required
     @api.marshal_with(user_response)
-    def put(self):
-        response = user_service.put(api.payload)
+    @api.doc(security='apikey')
+    def put(self,current_user):
+        response = user_service.put(api.payload,current_user)
         return response, 204
 
     @api.expect(id_request, validate=True)
+    @jwt_required
     @api.response(204, 'User deleted')
-    def delete(self):
-        response = user_service.delete(api.payload['id'])
+    @api.doc(security='apikey')
+    @api.header('Authorization','JWT TOKEN')
+    def delete(self,current_user):
+        response = user_service.delete(api.payload['id'],current_user)
         return response, 204
     
 @api.route('/<string:id>')
@@ -63,8 +69,10 @@ class CheckPassword(Resource):
 @api.route('/change-password')
 class ChangePassword(Resource):
     @api.expect(change_password_request, validate=True)
+    @jwt_required
     @api.marshal_with(response_default)
-    def post(self):
-        valid_password = user_service.change_password(api.payload['email'], api.payload['senha'], api.payload['nova_senha'])
+    @api.doc(security='apikey')
+    def post(self,current_user):
+        valid_password = user_service.change_password(api.payload['email'], api.payload['senha'], api.payload['nova_senha'],current_user)
         return valid_password, 200
     

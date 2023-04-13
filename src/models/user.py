@@ -56,5 +56,6 @@ change_password_request = server.api.model('changePasswordRequest',  {
 
 response_default = server.api.model('responseDefault',  {
     'resultado': fields.Boolean(),
+    'token':fields.String(),
     'mensagem': fields.String(),
 })
