@@ -68,18 +68,12 @@ class CheckPassword(Resource):
 
 @api.route('/change-password')
 class ChangePassword(Resource):
-<<<<<<< HEAD
     @api.expect(user.change_password_request, validate=True)
-    @api.marshal_with(user.response_default)
-    def post(self):
-        valid_password = user_service.change_password(api.payload['email'], api.payload['senha'], api.payload['nova_senha'])
-=======
-    @api.expect(change_password_request, validate=True)
     @jwt_required
-    @api.marshal_with(response_default)
+    @api.marshal_with(user.response_default)
     @api.doc(security='apikey')
     def post(self,current_user):
         valid_password = user_service.change_password(api.payload['email'], api.payload['senha'], api.payload['nova_senha'],current_user)
->>>>>>> 60bcd24535b8f08dddf4ebba493f1bd6c18e5d86
+
         return valid_password, 200
     
