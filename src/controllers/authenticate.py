@@ -10,7 +10,6 @@ def jwt_required(f):
     @wraps(f)
     def wrapper(*args,**kwargs):
         token=None
-        print(request.headers)
         if 'Authorization'in request.headers:
             token= request.headers['Authorization']
         

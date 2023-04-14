@@ -4,7 +4,6 @@ import os
 import dotenv
 dotenv.load_dotenv(dotenv.find_dotenv())
 
-
 class Server():
     def __init__(self):
         self.app = Flask(__name__)
@@ -16,7 +15,7 @@ class Server():
                        description='',
                        doc='/swagger',
                        authorizations={
-                             'Authorization': {
+                             'Bearer': {
                                  'type': 'apiKey',
                                  'in': 'header',
                                  'name': 'Authorization'

@@ -44,6 +44,7 @@ user_create_response = server.api.model('UserCreateResponse',  {
 
 user_update_request = server.api.inherit('userUpdateRequest',  server.api.model('userUpdateRequestProps',  {
     'nome': fields.String(required=True, min_Length=3, max_Length=200, description='Nome completo do usuário'),
+    'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email'),
     'telefone': fields.String(required=True, min_Length=6, max_Length=20, description='Telefone'),
     'endereco': fields.Nested(address)
 }), id)
@@ -60,6 +61,11 @@ change_password_request = server.api.model('changePasswordRequest',  {
 })
 
 response_default = server.api.model('responseDefault',  {
+    'resultado': fields.Boolean(),
+    'mensagem': fields.String(),
+})
+
+response_login_default = server.api.model('responseLoginDefault',  {
     'resultado': fields.Boolean(),
     'token':fields.String(),
     'mensagem': fields.String(),

@@ -22,19 +22,22 @@ class User(Common):
     def post(self, user):
         if(database.main[collection].find_one({"email": user['email']}) != None):
             return {'resultado': False,
-                    'mensagem': 'Erro ao criar usuário. Já existe um usuário com esse email'}
+                    'mensagem': 'Erro ao criar usuário. Já existe um usuário com esse email'},209
         user['senha'] = generate_password_hash(user['senha'])
         database.main[collection].insert_one(user)
         return {'resultado': True,
-                'mensagem': 'Usuário criado com sucesso'}
+                'mensagem': 'Usuário criado com sucesso'},201
                     
     def put(self, user,current_user):
         old_user = database.main[collection].find_one({'_id':  ObjectId(user['id'])})
         
         if not old_user:
-            return "Erro ao atualizar usuário. Não foi possível encontrar um usuário pelo id: {}.".format(user['id'])
-        if old_user['id']!=current_user['id']:
-            return "Erro ao atualizar usuário. Estas informações pertencem à outro usuário."
+            return {'resultado': {},
+                    'mensagem': 'Erro ao atualizar usuário. Usuário não encontrado'},404
+        
+        if str(old_user['_id'])!=current_user['id']:
+            return {'resultado': {},
+                    'mensagem': 'Erro ao atualizar usuário. Você não tem permissão para alterar este usuário'},403
 
         updated_user = old_user
         updated_user['nome'] = user['nome']
@@ -44,17 +47,29 @@ class User(Common):
         new_values = { '$set': updated_user}
         database.main[collection].update_one(my_query, new_values)
         return {'resultado': self.entity_response(updated_user),
-                'mensagem': 'Usuário alterado com sucesso'}
+                'mensagem': 'Usuário alterado com sucesso'},201
          
 
     def delete(self, id,current_user):
         user = database.main[collection].find_one({'_id':  ObjectId(id)})
         if not user:
-            return "Erro ao apagar usuário. Não foi possível encontrar um usuário pelo id: {}.".format(user['id'])
-        if user['id']!=current_user['id']:
-            return "Erro ao apagar usuário. Estas informações pertencem à outro usuário"
+            return {
+            "resultado": False,
+            "mensagem": "Erro ao apagar usuário. Não foi possível encontrar este usuário"
+            },404
+        
+        if str(user['_id'])!=current_user['id']:
+            return {
+            "resultado": False,
+            "mensagem": "Erro ao apagar usuário. Estas informações pertencem à outro usuário"
+            },401
        
         database.main[collection].delete_one({'_id':  ObjectId(id)})
+
+        return {
+            "resultado": True,
+            "mensagem": "usuário deletado com sucesso"
+            },204
 
     def get_one(self, id):
         user = database.main[collection].find_one({'_id':  ObjectId(id)})
@@ -72,6 +87,7 @@ class User(Common):
             return {'resultado': False,
                     'token':'null',
                     'mensagem': 'Email não cadastrado'}
+        
         if not check_password_hash(user['senha'], password):
             return {'resultado': False,
                     'token':'null',
@@ -92,21 +108,24 @@ class User(Common):
         valid_old_password = self.verify_password(email, old_password)
         if valid_old_password['resultado']:
             user = database.main[collection].find_one({'email':  email})
-            if user['id'] != current_user['id']:
+            if str(user['_id']) != current_user['id']:
                  return {'resultado': False,
-                         'mensagem': 'Você não tem permissão para alterar este dado'}
+                         'mensagem': 'Você não tem permissão para alterar este dado'},401
 
             user['senha'] = generate_password_hash(new_password)
             my_query = { 'email':  email }
             new_values = { '$set': user}
             database.main[collection].update_one(my_query, new_values)
             return {'resultado': True,
-                    'mensagem': 'Senha alterada com sucesso'}
+                    'mensagem': 'Senha alterada com sucesso'},200
         
         if valid_old_password['mensagem'] == 'Senha inválida':
             return {'resultado': False,
-                    'mensagem': 'Senha antiga é inválida'}
-        return valid_old_password
+                    'mensagem': 'Senha antiga é inválida'},401 
+        if valid_old_password['mensagem'] == 'Email não cadastrado':
+            return {'resultado': False,
+                    'mensagem': 'Email não cadastrado'},404
+        
     
     def get_users_by_email(self, email):
         users = list(database.main[collection].find({"email": email}))

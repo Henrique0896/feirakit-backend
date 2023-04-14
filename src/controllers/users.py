@@ -18,24 +18,23 @@ class User(Resource):
     @api.marshal_with(user.user_create_response)
     def post(self):
         user = user_service.post(api.payload)
-        return user, 201
+        return user
     
     @api.expect(user.user_update_request, validate=True)
     @jwt_required
     @api.marshal_with(user.user_updated_response)
-    @api.doc(security='apikey')
+    @api.doc(security='Bearer')
     def put(self, current_user):
         response = user_service.put(api.payload, current_user)
-        return response, 204
+        return response
 
     @api.expect(id_request, validate=True)
     @jwt_required
-    @api.response(204, 'User deleted')
-    @api.doc(security='apikey')
-    @api.header('Authorization','JWT TOKEN')
+    @api.doc(security='Bearer')
+    @api.marshal_with(user.response_default)
     def delete(self,current_user):
         response = user_service.delete(api.payload['id'],current_user)
-        return response, 204
+        return response
     
 @api.route('/<string:id>')
 class UserSeachById(Resource):
@@ -61,19 +60,19 @@ class UserSeachByName(Resource):
 @api.route('/check-password')
 class CheckPassword(Resource):
     @api.expect(user.check_password_request, validate=True)
-    @api.marshal_with(user.response_default)
+    @api.marshal_with(user.response_login_default)
     def post(self):
         valid_password = user_service.verify_password(api.payload['email'], api.payload['senha'])
-        return valid_password, 200
+        return valid_password
 
 @api.route('/change-password')
 class ChangePassword(Resource):
     @api.expect(user.change_password_request, validate=True)
     @jwt_required
     @api.marshal_with(user.response_default)
-    @api.doc(security='apikey')
+    @api.doc(security='Bearer')
     def post(self,current_user):
         valid_password = user_service.change_password(api.payload['email'], api.payload['senha'], api.payload['nova_senha'],current_user)
 
-        return valid_password, 200
+        return valid_password
     

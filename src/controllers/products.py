@@ -1,6 +1,6 @@
 from flask_restx import Resource
 from src.program.instance import server
-from src.models.product import product_response, product_request, product_update_request
+from src.models.product import product_response, product_request, product_update_request,product_response_default,product_update_response
 from src.models.id import id_request
 from src.service.product import product_service
 from src.models.product_types import types_response
@@ -22,26 +22,27 @@ class Product(Resource):
 
     @api.expect(product_request, validate=True)
     @jwt_required
-    @api.marshal_list_with(product_request)
-    @api.doc(security='apikey')
+    @api.marshal_with(product_response_default)
+    @api.doc(security='Bearer')
     def post(self,current_user):
-        product = product_service.post(api.payload)
-        return product, 201
+        response = product_service.post(api.payload,current_user)
+        return response
 
     @api.expect(product_update_request)
     @jwt_required
-    @api.marshal_with(product_response)
+    @api.marshal_with(product_update_response)
+    @api.doc(security='Bearer')
     def put(self,current_user):
-        response = product_service.put(api.payload)
-        return response, 204
+        response = product_service.put(api.payload,current_user)
+        return response
 
     @api.expect(id_request, validate=True)
     @jwt_required
-    @api.response(204, 'Product deleted')
-    @api.doc(security='apikey')
+    @api.marshal_with(product_response_default)
+    @api.doc(security='Bearer')
     def delete(self,current_user):
-        product = product_service.delete(api.payload['id'],current_user)
-        return product, 204
+        response = product_service.delete(api.payload['id'],current_user)
+        return response
 
 @api.route('/<string:id>')
 class ProductSeachById(Resource):
