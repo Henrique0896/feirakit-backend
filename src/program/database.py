@@ -1,8 +1,8 @@
 from pymongo import MongoClient
-from src.core.settings_env import settings_env
+from src.core.var_env import var_env
 class Database():
     def __init__(self):
-        self.client = MongoClient(settings_env.get_var("DB_CONNECTION"))
-        self.main = self.client[settings_env.get_var("DATABASE")]
+        self.client = MongoClient(var_env.db_connection)
+        self.main = self.client[var_env.database]
 
 database = Database()
