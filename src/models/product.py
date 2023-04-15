@@ -1,13 +1,13 @@
 from flask_restx import fields
 from src.program.instance import server
 from src.models.id import id
-from src.models.enums import unidade_enum, categoria_enum
+from src.constants.products import unidades, categorias
 
-product_request = server.api.model('Product',  {
+request = server.api.model('Product',  {
     'nome': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do produto'),
-    'categoria': fields.String(required=True, enum=categoria_enum, description='Tipo de produto'),
+    'categoria': fields.String(required=True, enum=categorias, description='Tipo de produto'),
     'descricao': fields.String(required=True, min_Length=1, max_Length=200, description='Descrição do produto'),
-    'unidade': fields.String(required=True, enum=unidade_enum, description='Unidade do produto'),
+    'unidade': fields.String(required=True, enum=unidades, description='Unidade do produto'),
     'estoque': fields.Integer(required=True, description='Quantidade no estoque'),
     'produtor_id': fields.String(required=True, min_Length=1, max_Length=50, description='Nome produtor'),
     'bestbefore': fields.Boolean(required=True, description='Produto colhido após a compra'),
@@ -16,16 +16,21 @@ product_request = server.api.model('Product',  {
     'preco': fields.Float(description='valor do produto'),
 })
 
-product_response = server.api.inherit('ProductResponse', product_request, id)
+response = server.api.inherit('ProductResponse', request, id)
 
-product_update_request = server.api.inherit('ProductUpdateRequest',  product_request, id)
+update_request = server.api.inherit('ProductUpdateRequest',  request, id)
 
-product_update_response = server.api.inherit('ProductUpdateResponse',  {
-    'resultado': fields.Nested(server.api.inherit('ProductResponse', product_request, id)),
+update_response = server.api.inherit('ProductUpdateResponse',  {
+    'resultado': fields.Nested(server.api.inherit('ProductResponse', request, id)),
     'mensagem': fields.String()})
 
-product_response_default = server.api.model('ProductResponseDefault',  {
+response_default = server.api.model('ProductResponseDefault',  {
     'resultado': fields.Boolean(),
     'mensagem': fields.String(),
+})
+
+types_response = server.api.model('Units', {
+    'unidades': fields.List(fields.String),
+    'categorias': fields.List(fields.String)
 })
 

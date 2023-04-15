@@ -1,13 +1,8 @@
 from pymongo import MongoClient
-import os
-import dotenv
-dotenv.load_dotenv(dotenv.find_dotenv())
-
-
+from src.core.settings_env import settings_env
 class Database():
     def __init__(self):
-        self.client = MongoClient(os.getenv("DB_CONNECTION"))
-        self.main = self.client[os.getenv("DATABASE")]
-
+        self.client = MongoClient(settings_env.get_var("DB_CONNECTION"))
+        self.main = self.client[settings_env.get_var("DATABASE2")]
 
 database = Database()

@@ -1,7 +1,7 @@
 from bson import json_util
 import json
 
-class Common():
+class IdSettings():
     def get_id(self, entity):
         new_entity = json.loads(json_util.dumps(entity))
         return new_entity['_id']['$oid']
