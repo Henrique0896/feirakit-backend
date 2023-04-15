@@ -13,9 +13,9 @@ class User(IdSettings):
         users = list(database.main[self.collection].find())
         if not users:
             return {'resultado': None,
-                    'mensagem': 'Erro ao buscar usuários'}
+                    'mensagem': 'Erro ao buscar usuários'},404
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}
+                'mensagem': 'Usuários retornados com sucesso'},201
 
     def post(self, user):
         if (database.main[self.collection].find_one({"email": user['email']}) != None):

@@ -9,10 +9,12 @@ app, api = server.app, server.api.namespace('users',
 
 @api.route('')
 class User(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
     @api.marshal_with(user_model.response)
-    def get(self):
+    def get(self,current_user):
         users = user_service.get()
-        return users, 200
+        return users
 
     @api.expect(user_model.request, validate=True)
     @api.marshal_with(user_model.create_response)
@@ -38,6 +40,8 @@ class User(Resource):
 
 @api.route('/<string:id>')
 class UserSeachById(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
     @api.marshal_list_with(user_model.response)
     def get(self, id):
         user = user_service.get_one(id)
@@ -52,6 +56,8 @@ class UserSeachByEmail(Resource):
 
 @api.route('/byname/<string:name>')
 class UserSeachByName(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
     @api.marshal_list_with(user_model.response)
     def get(self, name):
         users = user_service.get_users_by_name(name)
