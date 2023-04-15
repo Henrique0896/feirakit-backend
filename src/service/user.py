@@ -99,12 +99,12 @@ class User(IdSettings):
         if not user:
             return {'resultado': False,
                     'token': 'null',
-                    'mensagem': 'Email não cadastrado'}
+                    'mensagem': 'Email não cadastrado'},404
 
         if not check_password_hash(user['senha'], password):
             return {'resultado': False,
                     'token': 'null',
-                    'mensagem': 'Senha inválida'}
+                    'mensagem': 'Senha inválida'},401
         payload = {
             "id": str(user['_id']),
             "nome": user['nome']
@@ -114,7 +114,7 @@ class User(IdSettings):
 
         return {'resultado': True,
                 'token': token,
-                'mensagem': 'Senha verificada'}
+                'mensagem': 'Senha verificada'},201
 
     def change_password(self, email, old_password, new_password, current_user):
         valid_old_password = self.verify_password(email, old_password)
@@ -139,7 +139,6 @@ class User(IdSettings):
                     'mensagem': 'Email não cadastrado'}, 404
 
     def get_users_by_email(self, email,current_user):
-        print(email)
         user = database.main[self.collection].find_one({"email": email})
         if not user:
             return {'resultado': None,
