@@ -69,15 +69,30 @@ class User(IdSettings):
             "mensagem": "usuário deletado com sucesso"
         }, 204
 
-    def get_one(self, id):
+    def get_one(self, id,current_user):
         user = database.main[self.collection].find_one({'_id':  ObjectId(id)})
+        if not user:
+            return {'resultado': None,
+                    'mensagem': 'Não foi possível encontrar este usuário'},404
+        if str(user['_id']) != current_user['id']:
+                 return {'resultado': False,
+                         'mensagem': 'Você não tem permissão para acessar este dado'}, 401
+        
         return {'resultado': self.entity_response(user),
-                'mensagem': 'Usuário retornado com sucesso'}
+                'mensagem': 'Usuário retornado com sucesso'},201
 
-    def get_users_by_name(self, name):
+    def get_users_by_name(self, name,current_user):
         users = list(database.main[self.collection].find({'nome': name}))
+        if not users:
+            return {'resultado': None,
+                    'mensagem': 'Não foi possível buscar usuários'},404
+        
+        if str(users[0]['_id']) != current_user['id']:
+                 return {'resultado': False,
+                         'mensagem': 'Você não tem permissão para acessar este dado'}, 401
+    
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}
+                'mensagem': 'Usuários retornados com sucesso'},201
 
     def verify_password(self, email, password):
         user = database.main[self.collection].find_one({'email':  email})
@@ -123,13 +138,17 @@ class User(IdSettings):
             return {'resultado': False,
                     'mensagem': 'Email não cadastrado'}, 404
 
-    def get_users_by_email(self, email):
-        users = list(database.main[self.collection].find({"email": email}))
-        if not users:
+    def get_users_by_email(self, email,current_user):
+        print(email)
+        user = database.main[self.collection].find_one({"email": email})
+        if not user:
             return {'resultado': None,
-                    'mensagem': 'Não foi possível buscar usuários'}
-        return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}
+                    'mensagem': 'Não foi possível buscar usuários'},404
+        if str(user['_id']) != current_user['id']:
+                 return {'resultado': False,
+                         'mensagem': 'Você não tem permissão para acessar este dado'}, 401
+        return {'resultado': self.entity_response(user),
+                'mensagem': 'Usuários retornados com sucesso'},201
 
 
 user_service = User()
