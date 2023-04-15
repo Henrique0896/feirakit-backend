@@ -49,6 +49,8 @@ class UserSeachById(Resource):
 
 @api.route('/byemail/<string:email>')
 class UserSeachByEmail(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
     @api.marshal_with(user_model.response)
     def get(self, email):
         users = user_service.get_users_by_email(email)
