@@ -1,6 +1,6 @@
 from flask_restx import Resource
 from flask import request
-from src.program.instance import server
+from src.program.server import server
 from src.models import product as product_model
 from src.models.id import id_request
 from src.service.product import product_service

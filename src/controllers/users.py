@@ -1,5 +1,5 @@
 from flask_restx import Resource
-from src.program.instance import server
+from src.program.server import server
 from src.models import user as user_model
 from src.models.id import id_request
 from src.service.user import user_service

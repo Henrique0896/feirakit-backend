@@ -1,5 +1,5 @@
 from flask_restx import fields
-from src.program.instance import server
+from src.program.server import server
 from src.models.id import id
 from src.constants.products import unidades, categorias
 
