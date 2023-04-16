@@ -74,9 +74,6 @@ class User(IdSettings):
         if not user:
             return {'resultado': None,
                     'mensagem': 'Não foi possível encontrar este usuário'},404
-        if str(user['_id']) != current_user['id']:
-                 return {'resultado': False,
-                         'mensagem': 'Você não tem permissão para acessar este dado'}, 401
         
         return {'resultado': self.entity_response(user),
                 'mensagem': 'Usuário retornado com sucesso'},201
@@ -86,10 +83,6 @@ class User(IdSettings):
         if not users:
             return {'resultado': None,
                     'mensagem': 'Não foi possível buscar usuários'},404
-        
-        if str(users[0]['_id']) != current_user['id']:
-                 return {'resultado': False,
-                         'mensagem': 'Você não tem permissão para acessar este dado'}, 401
     
         return {'resultado': self.entity_response_list(users),
                 'mensagem': 'Usuários retornados com sucesso'},201
