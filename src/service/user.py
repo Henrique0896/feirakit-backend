@@ -111,11 +111,11 @@ class User(IdSettings):
 
     def change_password(self, email, old_password, new_password, current_user):
         valid_old_password = self.verify_password(email, old_password)
-        if valid_old_password['resultado']:
+        if valid_old_password[0]['resultado']:
             user = database.main[self.collection].find_one({'email':  email})
             if str(user['_id']) != current_user['id']:
                 return {'resultado': False,
-                        'mensagem': 'Você não tem permissão para alterar este dado'}, 401
+                         'mensagem': 'Você não tem permissão para alterar este dado'}, 401
 
             user['senha'] = generate_password_hash(new_password)
             my_query = {'email':  email}
@@ -124,10 +124,10 @@ class User(IdSettings):
             return {'resultado': True,
                     'mensagem': 'Senha alterada com sucesso'}, 200
 
-        if valid_old_password['mensagem'] == 'Senha inválida':
+        if valid_old_password[0]['mensagem'] == 'Senha inválida':
             return {'resultado': False,
                     'mensagem': 'Senha antiga é inválida'}, 401
-        if valid_old_password['mensagem'] == 'Email não cadastrado':
+        if valid_old_password[0]['mensagem'] == 'Email não cadastrado':
             return {'resultado': False,
                     'mensagem': 'Email não cadastrado'}, 404
 

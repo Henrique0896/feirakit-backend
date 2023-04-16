@@ -9,7 +9,7 @@ from src.core.var_env import var_env
 class Authenticate(IdSettings):
     def __init__(self):
         self.collection = 'user'
-
+ 
     def jwt_required(self, f):
         @wraps(f)
         def wrapper(*args, **kwargs):
