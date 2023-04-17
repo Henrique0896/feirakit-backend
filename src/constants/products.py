@@ -3,7 +3,8 @@ categorias = ['fruta',
               'verdura',
               'hortalicas',
               'leite e derivados',
-              'produtos naturais'
+              'produtos naturais',
+              'artesanato'
               ]
 
 unidades = ['unidade',
