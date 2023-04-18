@@ -21,7 +21,9 @@ class Server():
                        )
 
     def run(self):
-        self.app.run()
+        self.app.run(
+            host='0.0.0.0', port=var_env.port
+        )
 
 
 server = Server()
