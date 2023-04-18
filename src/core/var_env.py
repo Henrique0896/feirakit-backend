@@ -7,6 +7,6 @@ class VarEnvs():
         self.secret_key = getenv("SECRET_KEY")
         self.database = getenv("DATABASE")
         self.db_connection = getenv("DB_CONNECTION")
-        self.port = getenv("PORT")
+        self.port = 5000
 
 var_env = VarEnvs()
