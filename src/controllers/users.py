@@ -1,4 +1,5 @@
 from flask_restx import Resource
+from flask import request
 from src.program.server import server
 from src.models import user as user_model
 from src.models.id import id_request
@@ -9,10 +10,12 @@ app, api = server.app, server.api.namespace('users',
 
 @api.route('')
 class User(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
     @api.marshal_with(user_model.response)
-    def get(self):
+    def get(self,current_user):
         users = user_service.get()
-        return users, 200
+        return users
 
     @api.expect(user_model.request, validate=True)
     @api.marshal_with(user_model.create_response)
@@ -36,26 +39,39 @@ class User(Resource):
         response = user_service.delete(api.payload['id'], current_user)
         return response
 
-@api.route('/<string:id>')
+@api.route('/byuserid/')
 class UserSeachById(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
+    @api.doc(params={'id': 'Id of user'})
     @api.marshal_list_with(user_model.response)
-    def get(self, id):
-        user = user_service.get_one(id)
-        return user, 200
+    def get(self,current_user):
+        id= request.args.get('id',type=str)
+        user = user_service.get_one(id,current_user)
+        return user
 
-@api.route('/byemail/<string:email>')
+@api.route('/byemail/')
 class UserSeachByEmail(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
+    @api.doc(params={'email': 'Email of user'})
     @api.marshal_with(user_model.response)
-    def get(self, email):
-        users = user_service.get_users_by_email(email)
-        return users, 200
+    def get(self,current_user):
+        email= request.args.get('email',type=str)
+        users = user_service.get_users_by_email(email,current_user)
+        return users
 
-@api.route('/byname/<string:name>')
+
+@api.route('/byname/')
 class UserSeachByName(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
+    @api.doc(params={'name': 'name of user'})
     @api.marshal_list_with(user_model.response)
-    def get(self, name):
-        users = user_service.get_users_by_name(name)
-        return users, 200
+    def get(self,current_user):
+        name= request.args.get('name',type=str)
+        users = user_service.get_users_by_name(name,current_user)
+        return users
 
 @api.route('/check-password')
 class CheckPassword(Resource):

@@ -13,9 +13,9 @@ class User(IdSettings):
         users = list(database.main[self.collection].find())
         if not users:
             return {'resultado': None,
-                    'mensagem': 'Erro ao buscar usuários'}
+                    'mensagem': 'Erro ao buscar usuários'},404
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}
+                'mensagem': 'Usuários retornados com sucesso'},201
 
     def post(self, user):
         if (database.main[self.collection].find_one({"email": user['email']}) != None):
@@ -69,27 +69,35 @@ class User(IdSettings):
             "mensagem": "usuário deletado com sucesso"
         }, 204
 
-    def get_one(self, id):
+    def get_one(self, id,current_user):
         user = database.main[self.collection].find_one({'_id':  ObjectId(id)})
+        if not user:
+            return {'resultado': None,
+                    'mensagem': 'Não foi possível encontrar este usuário'},404
+        
         return {'resultado': self.entity_response(user),
-                'mensagem': 'Usuário retornado com sucesso'}
+                'mensagem': 'Usuário retornado com sucesso'},201
 
-    def get_users_by_name(self, name):
+    def get_users_by_name(self, name,current_user):
         users = list(database.main[self.collection].find({'nome': name}))
+        if not users:
+            return {'resultado': None,
+                    'mensagem': 'Não foi possível buscar usuários'},404
+    
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}
+                'mensagem': 'Usuários retornados com sucesso'},201
 
     def verify_password(self, email, password):
         user = database.main[self.collection].find_one({'email':  email})
         if not user:
             return {'resultado': False,
                     'token': 'null',
-                    'mensagem': 'Email não cadastrado'}
+                    'mensagem': 'Email não cadastrado'},404
 
         if not check_password_hash(user['senha'], password):
             return {'resultado': False,
                     'token': 'null',
-                    'mensagem': 'Senha inválida'}
+                    'mensagem': 'Senha inválida'},401
         payload = {
             "id": str(user['_id']),
             "nome": user['nome']
@@ -99,15 +107,15 @@ class User(IdSettings):
 
         return {'resultado': True,
                 'token': token,
-                'mensagem': 'Senha verificada'}
+                'mensagem': 'Senha verificada'},201
 
     def change_password(self, email, old_password, new_password, current_user):
         valid_old_password = self.verify_password(email, old_password)
-        if valid_old_password['resultado']:
+        if valid_old_password[0]['resultado']:
             user = database.main[self.collection].find_one({'email':  email})
             if str(user['_id']) != current_user['id']:
                 return {'resultado': False,
-                        'mensagem': 'Você não tem permissão para alterar este dado'}, 401
+                         'mensagem': 'Você não tem permissão para alterar este dado'}, 401
 
             user['senha'] = generate_password_hash(new_password)
             my_query = {'email':  email}
@@ -116,20 +124,23 @@ class User(IdSettings):
             return {'resultado': True,
                     'mensagem': 'Senha alterada com sucesso'}, 200
 
-        if valid_old_password['mensagem'] == 'Senha inválida':
+        if valid_old_password[0]['mensagem'] == 'Senha inválida':
             return {'resultado': False,
                     'mensagem': 'Senha antiga é inválida'}, 401
-        if valid_old_password['mensagem'] == 'Email não cadastrado':
+        if valid_old_password[0]['mensagem'] == 'Email não cadastrado':
             return {'resultado': False,
                     'mensagem': 'Email não cadastrado'}, 404
 
-    def get_users_by_email(self, email):
-        users = list(database.main[self.collection].find({"email": email}))
-        if not users:
+    def get_users_by_email(self, email,current_user):
+        user = database.main[self.collection].find_one({"email": email})
+        if not user:
             return {'resultado': None,
-                    'mensagem': 'Não foi possível buscar usuários'}
-        return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}
+                    'mensagem': 'Não foi possível buscar usuários'},404
+        if str(user['_id']) != current_user['id']:
+                 return {'resultado': False,
+                         'mensagem': 'Você não tem permissão para acessar este dado'}, 401
+        return {'resultado': self.entity_response(user),
+                'mensagem': 'Usuários retornados com sucesso'},201
 
 
 user_service = User()
