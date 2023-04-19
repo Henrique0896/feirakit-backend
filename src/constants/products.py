@@ -1,7 +1,11 @@
 categorias = ['fruta',
               'legume',
               'verdura',
-              'hortalicas']
+              'hortalicas',
+              'leite e derivados',
+              'produtos naturais',
+              'artesanato'
+              ]
 
 unidades = ['unidade',
             'cartela',
@@ -10,4 +14,7 @@ unidades = ['unidade',
             'dezena',
             'kilograma',
             'grama',
-            'litro']
+            'litro',
+            '1/2 forma',
+            'forma'
+            ]
