@@ -1,15 +1,13 @@
 from flask import request
-from bson import ObjectId
 from functools import wraps
 from jwt import decode
-from src.program.database import database
-from src.service.id_settings import IdSettings
 from src.core.var_env import var_env
+from src.service.user import user_service
 
-class Authenticate(IdSettings):
+class Authenticate():
     def __init__(self):
         self.collection = 'user'
- 
+
     def jwt_required(self, f):
         @wraps(f)
         def wrapper(*args, **kwargs):
@@ -25,9 +23,9 @@ class Authenticate(IdSettings):
 
             try:
                 token_pure = token.replace("Bearer ", "")
-                decoded = decode(token_pure, var_env.secret_key,
-                                 algorithms=["HS256"])
-                current_user=self.entity_response(database.main[self.collection].find_one({'_id':  ObjectId(decoded['id'])}))
+                token = decode(token_pure, var_env.secret_key,
+                               algorithms=["HS256"])
+                current_user = user_service.get_user_by_id(token['id'])
             except:
                 return {"error": "O token é inválido"}, 403
 

@@ -5,6 +5,7 @@ from src.service.id_settings import IdSettings
 from src.program.database import database
 from src.core.var_env import var_env
 
+
 class User(IdSettings):
     def __init__(self):
         self.collection = 'user'
@@ -13,9 +14,9 @@ class User(IdSettings):
         users = list(database.main[self.collection].find())
         if not users:
             return {'resultado': None,
-                    'mensagem': 'Erro ao buscar usuários'},404
+                    'mensagem': 'Erro ao buscar usuários'}, 404
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'},201
+                'mensagem': 'Usuários retornados com sucesso'}, 201
 
     def post(self, user):
         if (database.main[self.collection].find_one({"email": user['email']}) != None):
@@ -69,35 +70,35 @@ class User(IdSettings):
             "mensagem": "usuário deletado com sucesso"
         }, 204
 
-    def get_one(self, id,current_user):
+    def get_one(self, id, current_user):
         user = database.main[self.collection].find_one({'_id':  ObjectId(id)})
         if not user:
             return {'resultado': None,
-                    'mensagem': 'Não foi possível encontrar este usuário'},404
-        
-        return {'resultado': self.entity_response(user),
-                'mensagem': 'Usuário retornado com sucesso'},201
+                    'mensagem': 'Não foi possível encontrar este usuário'}, 404
 
-    def get_users_by_name(self, name,current_user):
+        return {'resultado': self.entity_response(user),
+                'mensagem': 'Usuário retornado com sucesso'}, 201
+
+    def get_users_by_name(self, name, current_user):
         users = list(database.main[self.collection].find({'nome': name}))
         if not users:
             return {'resultado': None,
-                    'mensagem': 'Não foi possível buscar usuários'},404
-    
+                    'mensagem': 'Não foi possível buscar usuários'}, 404
+
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'},201
+                'mensagem': 'Usuários retornados com sucesso'}, 201
 
     def verify_password(self, email, password):
         user = database.main[self.collection].find_one({'email':  email})
         if not user:
             return {'resultado': False,
                     'token': 'null',
-                    'mensagem': 'Email não cadastrado'},404
+                    'mensagem': 'Email não cadastrado'}, 404
 
         if not check_password_hash(user['senha'], password):
             return {'resultado': False,
                     'token': 'null',
-                    'mensagem': 'Senha inválida'},401
+                    'mensagem': 'Senha inválida'}, 401
         payload = {
             "id": str(user['_id']),
             "nome": user['nome']
@@ -107,7 +108,7 @@ class User(IdSettings):
 
         return {'resultado': True,
                 'token': token,
-                'mensagem': 'Senha verificada'},201
+                'mensagem': 'Senha verificada'}, 201
 
     def change_password(self, email, old_password, new_password, current_user):
         valid_old_password = self.verify_password(email, old_password)
@@ -115,7 +116,7 @@ class User(IdSettings):
             user = database.main[self.collection].find_one({'email':  email})
             if str(user['_id']) != current_user['id']:
                 return {'resultado': False,
-                         'mensagem': 'Você não tem permissão para alterar este dado'}, 401
+                        'mensagem': 'Você não tem permissão para alterar este dado'}, 401
 
             user['senha'] = generate_password_hash(new_password)
             my_query = {'email':  email}
@@ -131,16 +132,21 @@ class User(IdSettings):
             return {'resultado': False,
                     'mensagem': 'Email não cadastrado'}, 404
 
-    def get_users_by_email(self, email,current_user):
+    def get_users_by_email(self, email, current_user):
         user = database.main[self.collection].find_one({"email": email})
         if not user:
             return {'resultado': None,
-                    'mensagem': 'Não foi possível buscar usuários'},404
+                    'mensagem': 'Não foi possível buscar usuários'}, 404
         if str(user['_id']) != current_user['id']:
-                 return {'resultado': False,
-                         'mensagem': 'Você não tem permissão para acessar este dado'}, 401
+            return {'resultado': False,
+                    'mensagem': 'Você não tem permissão para acessar este dado'}, 401
         return {'resultado': self.entity_response(user),
-                'mensagem': 'Usuários retornados com sucesso'},201
+                'mensagem': 'Usuários retornados com sucesso'}, 201
+
+    def get_user_by_id(self, id):
+        user = self.entity_response(
+            database.main[self.collection].find_one({'_id':  ObjectId(id)}))
+        return user
 
 
 user_service = User()
