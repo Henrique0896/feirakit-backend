@@ -59,6 +59,9 @@ change_password_request = server.api.model('changePasswordRequest',  {
     'senha': fields.String(required=True, min_Length=4, max_Length=200, description='Senha antiga'),
     'nova_senha': fields.String(required=True, min_Length=4, max_Length=200, description='Nova senha'),
 })
+send_email_response = server.api.model('sendEmailResponse',  {
+    'resultado': fields.String(required=True, min_Length=5, max_Length=200, description='resultado'),
+})
 
 response_default = server.api.model('responseDefault',  {
     'resultado': fields.Boolean(),

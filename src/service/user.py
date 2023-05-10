@@ -4,6 +4,9 @@ from jwt import encode
 from src.service.id_settings import IdSettings
 from src.program.database import database
 from src.core.var_env import var_env
+from flask_mailman import EmailMessage
+from src.program.server import server
+
 
 
 class User(IdSettings):
@@ -16,12 +19,12 @@ class User(IdSettings):
             return {'resultado': None,
                     'mensagem': 'Erro ao buscar usuários'}, 404
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}, 201
+                'mensagem': 'Usuários retornados com sucesso'}, 200
 
     def post(self, user):
         if (database.main[self.collection].find_one({"email": user['email']}) != None):
             return {'resultado': False,
-                    'mensagem': 'Erro ao criar usuário. Já existe um usuário com esse email'}, 209
+                    'mensagem': 'Erro ao criar usuário. Já existe um usuário com esse email'}, 409
         user['senha'] = generate_password_hash(user['senha'])
         database.main[self.collection].insert_one(user)
         return {'resultado': True,
@@ -37,7 +40,7 @@ class User(IdSettings):
 
         if str(old_user['_id']) != current_user['id']:
             return {'resultado': {},
-                    'mensagem': 'Erro ao atualizar usuário. Você não tem permissão para alterar este usuário'}, 403
+                    'mensagem': 'Erro ao atualizar usuário. Você não tem permissão para alterar este usuário'}, 401
 
         updated_user = old_user
         updated_user['nome'] = user['nome']
@@ -47,7 +50,7 @@ class User(IdSettings):
         new_values = {'$set': updated_user}
         database.main[self.collection].update_one(my_query, new_values)
         return {'resultado': self.entity_response(updated_user),
-                'mensagem': 'Usuário alterado com sucesso'}, 201
+                'mensagem': 'Usuário alterado com sucesso'}, 200
 
     def delete(self, id, current_user):
         user = database.main[self.collection].find_one({'_id':  ObjectId(id)})
@@ -77,7 +80,7 @@ class User(IdSettings):
                     'mensagem': 'Não foi possível encontrar este usuário'}, 404
 
         return {'resultado': self.entity_response(user),
-                'mensagem': 'Usuário retornado com sucesso'}, 201
+                'mensagem': 'Usuário retornado com sucesso'}, 200
 
     def get_users_by_name(self, name, current_user):
         users = list(database.main[self.collection].find({'nome': name}))
@@ -86,7 +89,7 @@ class User(IdSettings):
                     'mensagem': 'Não foi possível buscar usuários'}, 404
 
         return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}, 201
+                'mensagem': 'Usuários retornados com sucesso'}, 200
 
     def verify_password(self, email, password):
         user = database.main[self.collection].find_one({'email':  email})
@@ -108,7 +111,7 @@ class User(IdSettings):
 
         return {'resultado': True,
                 'token': token,
-                'mensagem': 'Senha verificada'}, 201
+                'mensagem': 'Senha verificada'}, 202
 
     def change_password(self, email, old_password, new_password, current_user):
         valid_old_password = self.verify_password(email, old_password)
@@ -141,12 +144,16 @@ class User(IdSettings):
             return {'resultado': False,
                     'mensagem': 'Você não tem permissão para acessar este dado'}, 401
         return {'resultado': self.entity_response(user),
-                'mensagem': 'Usuários retornados com sucesso'}, 201
+                'mensagem': 'Usuários retornados com sucesso'}, 200
 
     def get_user_by_id(self, id):
         user = self.entity_response(
             database.main[self.collection].find_one({'_id':  ObjectId(id)}))
         return user
-
+    
+    def send_email(self, to):
+        msg = EmailMessage("Esse email foi enviado por causa de uma requisição de senha.",
+        "body", var_env.email, [to], reply_to=[var_env.email])
+        msg.send()
 
 user_service = User()

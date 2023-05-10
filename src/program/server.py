@@ -1,9 +1,15 @@
 from flask import Flask
 from flask_restx import Api
 from src.core.var_env import var_env
+from flask_mailman import Mail
+
 class Server():
     def __init__(self):
         self.app = Flask(__name__)
+        self.mail = Mail(self.app)
+        self.MAIL_PORT = "0.0.0.0:5000"
+        self.MAIL_USERNAME = "Feirakit@gmai.com"
+        self.MAIL_PASSWORD = "Feirakit@123"
         self.app.config.setdefault("RESTX_MASK_SWAGGER", False)
         self.app.config['SECRET_KEY'] = [var_env.secret_key]
         self.api = Api(self.app,
@@ -19,12 +25,12 @@ class Server():
                              }
                        }
                        )
-
+        
     def run(self):
         self.app.run(
             host='0.0.0.0', port=var_env.port,
-            debug=True
+            debug=True 
         )
-
-
+        
+        
 server = Server()
