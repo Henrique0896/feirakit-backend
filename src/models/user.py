@@ -63,6 +63,15 @@ send_email_response = server.api.model('sendEmailResponse',  {
     'resultado': fields.String(required=True, min_Length=5, max_Length=200, description='resultado'),
 })
 
+send_email_request = server.api.model('sendEmailRequest',  {
+    'rua': fields.String(required=True, min_Length=3, max_Length=200, description='Rua'),
+    'numero': fields.String(required=True, min_Length=1, max_Length=1000, description='Numero'),
+    'cep': fields.String(required=True, min_Length=8, max_Length=8, description='CEP'),
+    'cidade': fields.String(required=True, min_Length=3, max_Length=200, description='Cidade'),
+    'estado': fields.String(required=True, min_Length=1, max_Length=3, description='estado'),
+    'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email')
+})
+
 response_default = server.api.model('responseDefault',  {
     'resultado': fields.Boolean(),
     'mensagem': fields.String(),

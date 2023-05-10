@@ -4,8 +4,7 @@ from jwt import encode
 from src.service.id_settings import IdSettings
 from src.program.database import database
 from src.core.var_env import var_env
-from flask_mailman import EmailMessage
-from src.program.server import server
+import smtplib
 
 
 
@@ -151,9 +150,19 @@ class User(IdSettings):
             database.main[self.collection].find_one({'_id':  ObjectId(id)}))
         return user
     
-    def send_email(self, to):
-        msg = EmailMessage("Esse email foi enviado por causa de uma requisição de senha.",
-        "body", var_env.email, [to], reply_to=[var_env.email])
-        msg.send()
+    def send_email(self, user):
+        user_db = database.main[self.collection].find_one({"email": user['email']})
+
+        if(user_db['rua'] != user['rua']):
+            return False
+
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login('feirakit@gmail.com', 'ydrssvpxvbegnlzd')
+        server.sendmail(
+        var_env.email,
+        "barrosohenriquelima@gmail.com",
+        "conteudo da msn")
+        server.quit()
+        return True
 
 user_service = User()

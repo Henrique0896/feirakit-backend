@@ -6,10 +6,6 @@ from flask_mailman import Mail
 class Server():
     def __init__(self):
         self.app = Flask(__name__)
-        self.mail = Mail(self.app)
-        self.MAIL_PORT = "0.0.0.0:5000"
-        self.MAIL_USERNAME = "Feirakit@gmai.com"
-        self.MAIL_PASSWORD = "Feirakit@123"
         self.app.config.setdefault("RESTX_MASK_SWAGGER", False)
         self.app.config['SECRET_KEY'] = [var_env.secret_key]
         self.api = Api(self.app,
