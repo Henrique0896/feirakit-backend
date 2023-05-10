@@ -63,7 +63,7 @@ class Product(IdSettings):
 
     def get_products_by_name(self, name):
         products = list(database.main[self.collection].find(
-            {'nome': {'$regex': name}}))
+            {'nome': {'$regex': name, '$options' : 'i'}}))
         return self.entity_response_list(products)
 
     def get_products_by_id_usuario(self, id_usuario):
