@@ -9,5 +9,6 @@ class VarEnvs():
         self.db_connection = getenv("DB_CONNECTION")
         self.port = int(getenv("PORT"))
         self.email = str(getenv("EMAIL"))
+        self.senha = str(getenv("APPSENHA"))
 
 var_env = VarEnvs()

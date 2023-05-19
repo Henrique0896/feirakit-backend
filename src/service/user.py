@@ -4,6 +4,7 @@ from jwt import encode
 from src.service.id_settings import IdSettings
 from src.program.database import database
 from src.core.var_env import var_env
+from random import randint
 import smtplib
 
 
@@ -152,17 +153,25 @@ class User(IdSettings):
     
     def send_email(self, user):
         user_db = database.main[self.collection].find_one({"email": user['email']})
+        if not user_db:
+            return {'resultado': "A conta com esse email não foi encontrada"}, 404
+        if user['numero'] != user_db['endereco']['numero'] and user['cep'] != user_db['endereco']['cep'] and user['cidade'] != user_db['endereco']['cidade'] and user['telefone'] != user_db['telefone']:
+            return {'resultado': "Uma ou mais informações estão erradas"}, 401
 
-        if(user_db['rua'] != user['rua']):
-            return False
+        senha = randint(10000,99999)
+        senha = str(senha)
+        user_db['senha'] = generate_password_hash(senha)
+        my_query = {'email':  user['email']}
+        new_values = {'$set': user_db}
+        database.main[self.collection].update_one(my_query, new_values)
 
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.login('feirakit@gmail.com', 'ydrssvpxvbegnlzd')
+        server.login(var_env.email, var_env.senha)
         server.sendmail(
         var_env.email,
-        "barrosohenriquelima@gmail.com",
-        "conteudo da msn")
+        user['email'],
+        "sua nova senha e {}".format(senha))
         server.quit()
-        return True
+        return {'resultado': "email enviado"}, 201
 
 user_service = User()
