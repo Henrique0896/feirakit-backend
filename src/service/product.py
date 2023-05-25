@@ -59,22 +59,22 @@ class Product(IdSettings):
 
     def get_one(self, id):
         product = database.main[self.collection].find_one({'_id':  ObjectId(id)})
-        return self.entity_response(product)
+        return self.entity_response(product), 200
 
     def get_products_by_name(self, name):
         products = list(database.main[self.collection].find(
             {'nome': {'$regex': name}}))
-        return self.entity_response_list(products)
+        return self.entity_response_list(products), 200
 
     def get_products_by_id_usuario(self, id_usuario):
         products = list(database.main[self.collection].find(
             {'produtor_id': id_usuario}))
-        return self.entity_response_list(products)
+        return self.entity_response_list(products), 200
 
     def get_product_types(self):
         return {
             'unidades': unidades,
             'categorias': categorias
-        }
+        }, 200
 
 product_service = Product()

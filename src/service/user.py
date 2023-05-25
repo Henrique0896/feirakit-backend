@@ -25,6 +25,7 @@ class User(IdSettings):
         if (database.main[self.collection].find_one({"email": user['email']}) != None):
             return {'resultado': False,
                     'mensagem': 'Erro ao criar usuário. Já existe um usuário com esse email'}, 409
+
         user['senha'] = generate_password_hash(user['senha'])
         database.main[self.collection].insert_one(user)
         return {'resultado': True,
