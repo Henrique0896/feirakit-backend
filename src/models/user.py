@@ -82,3 +82,8 @@ response_login_default = server.api.model('responseLoginDefault',  {
     'token': fields.String(),
     'mensagem': fields.String(),
 })
+
+city_response = server.api.model('UserResponse',  {
+    'resultado': fields.String(),
+    'mensagem': fields.String(),
+})

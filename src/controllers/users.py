@@ -15,7 +15,7 @@ class User(Resource):
     @authenticate.jwt_required
     @api.doc(security='Bearer')
     @api.marshal_with(user_model.response)
-    def get(self,current_user):
+    def get(self, current_user):
         users = user_service.get()
         return users
 
@@ -102,6 +102,15 @@ class SendEmailToUser(Resource):
     @api.doc(security='Bearer')
     @api.marshal_list_with(user_model.send_email_response)
     @api.expect(user_model.send_email_request, validate=True)
-    def post(self):
+    def post(self, current_user):
         result = user_service.send_email(api.payload)
         return result
+
+@api.route('/get_cities')
+class GetCities(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
+    @api.marshal_with(user_model.city_response)
+    def get(self, current_user):
+        users = user_service.get_cities()
+        return users

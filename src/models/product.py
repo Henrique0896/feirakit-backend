@@ -2,8 +2,11 @@ from flask_restx import fields
 from src.program.server import server
 from src.models.id import id
 from src.constants.products import unidades, categorias
+from src.service.user import user_service
 
+cidades = user_service.get_cities()
 request = server.api.model('Product',  {
+    'disponivel': fields.List(fields.String(), enum=cidades),
     'nome': fields.String(required=True, min_Length=1, max_Length=200, description='Nome do produto'),
     'categoria': fields.String(required=True, enum=categorias, description='Tipo de produto'),
     'descricao': fields.String(required=True, min_Length=1, max_Length=200, description='Descrição do produto'),
