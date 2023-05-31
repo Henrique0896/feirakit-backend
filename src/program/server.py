@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_restx import Api
 from src.core.var_env import var_env
+from flask_mailman import Mail
+
 class Server():
     def __init__(self):
         self.app = Flask(__name__)
@@ -19,12 +21,12 @@ class Server():
                              }
                        }
                        )
-
+        
     def run(self):
         self.app.run(
             host='0.0.0.0', port=var_env.port,
-            debug=True
+            debug=True 
         )
-
-
+        
+        
 server = Server()
