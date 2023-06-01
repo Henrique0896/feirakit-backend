@@ -105,12 +105,3 @@ class SendEmailToUser(Resource):
     def post(self, current_user):
         result = user_service.send_email(api.payload)
         return result
-
-@api.route('/get_cities')
-class GetCities(Resource):
-    @authenticate.jwt_required
-    @api.doc(security='Bearer')
-    @api.marshal_with(user_model.city_response)
-    def get(self, current_user):
-        users = user_service.get_cities()
-        return users

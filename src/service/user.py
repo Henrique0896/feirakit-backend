@@ -161,14 +161,13 @@ class User(IdSettings):
         if user['numero'] != user_db['endereco']['numero'] and user['cep'] != user_db['endereco']['cep'] and user['cidade'] != user_db['endereco']['cidade'] and user['telefone'] != user_db['telefone']:
             return {'resultado': "Uma ou mais informações estão erradas"}, 401
 
-        senha =  secrets.token_hex(6)
-        senha = str(senha)
+        senha = str(secrets.token_hex(6))
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.login(var_env.email, var_env.senha)
         server.sendmail(
         var_env.email,
         user['email'],
-        "sua nova senha e {}".format(senha))
+        "use a seguinte senha para entrar na sua aplicacao: {}".format(senha))
         server.quit()
           
         user_db['senha'] = generate_password_hash(senha)
@@ -176,21 +175,6 @@ class User(IdSettings):
         new_values = {'$set': user_db}
         database.main[self.collection].update_one(my_query, new_values)
         return {'resultado': "email enviado"}, 201
-
-    def get_cities(self):
-        users = list(database.main[self.collection].find())
-
-        cities = []
-        i = 0
-        for emails in users:
-            cities.insert(1, users[i]['endereco']['cidade'])
-            i = i + 1
-        cities = list(set(cities))
-        print(cities)
-        return cities{
-                'resultado': cities,
-                'mensagem': "deu certo",
-            }
 
             
 user_service = User()

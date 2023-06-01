@@ -65,10 +65,10 @@ send_email_response = server.api.model('sendEmailResponse',  {
 
 send_email_request = server.api.model('sendEmailRequest',  {
     'rua': fields.String(required=True, min_Length=3, max_Length=200, description='Rua'),
-    'numero': fields.String(required=True, min_Length=1, max_Length=1000, description='Numero'),
+    'numero': fields.String(required=True, min_Length=1, max_Length=100, description='Numero'),
     'cep': fields.String(required=True, min_Length=8, max_Length=8, description='CEP'),
     'cidade': fields.String(required=True, min_Length=3, max_Length=200, description='Cidade'),
-    'telefone': fields.String(required=True, min_Length=1, max_Length=3, description='telefone'),
+    'telefone': fields.String(required=True, min_Length=1, max_Length=12, description='telefone'),
     'email': fields.String(required=True, min_Length=5, max_Length=200, description='Email')
 })
 
@@ -80,10 +80,5 @@ response_default = server.api.model('responseDefault',  {
 response_login_default = server.api.model('responseLoginDefault',  {
     'resultado': fields.Boolean(),
     'token': fields.String(),
-    'mensagem': fields.String(),
-})
-
-city_response = server.api.model('UserResponse',  {
-    'resultado': fields.String(),
     'mensagem': fields.String(),
 })
