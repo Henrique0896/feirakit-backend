@@ -13,14 +13,6 @@ class User(IdSettings):
     def __init__(self):
         self.collection = 'user'
 
-    def get(self):
-        users = list(database.main[self.collection].find())
-        if not users:
-            return {'resultado': None,
-                    'mensagem': 'Erro ao buscar usuários'}, 404
-        return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}, 200
-
     def post(self, user):
         if (database.main[self.collection].find_one({"email": user['email']}) != None):
             return {'resultado': False,
@@ -82,15 +74,6 @@ class User(IdSettings):
 
         return {'resultado': self.entity_response(user),
                 'mensagem': 'Usuário retornado com sucesso'}, 200
-
-    def get_users_by_name(self, name, current_user):
-        users = list(database.main[self.collection].find({'nome': name}))
-        if not users:
-            return {'resultado': None,
-                    'mensagem': 'Não foi possível buscar usuários'}, 404
-
-        return {'resultado': self.entity_response_list(users),
-                'mensagem': 'Usuários retornados com sucesso'}, 200
 
     def verify_password(self, email, password):
         user = database.main[self.collection].find_one({'email':  email})
