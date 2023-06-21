@@ -36,7 +36,6 @@ types_response = server.api.model('Units', {
 })
 
 cities = server.api.model('Cities', {
-    'id': fields.Integer(),
     'nome': fields.String()
 })
 

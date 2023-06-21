@@ -91,14 +91,11 @@ class Product(IdSettings):
         cities = list(set(cities))
 
         resultado = []
-        count = 1
 
         for city in cities:
              resultado.append({
-                 "id": count,
                  "nome": city
              })
-             count+=1
 
         return {"resultado": resultado,
                  "mensagem": "Sucesso"}, 200
