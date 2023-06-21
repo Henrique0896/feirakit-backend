@@ -8,7 +8,6 @@ import secrets
 import smtplib
 
 
-
 class User(IdSettings):
     def __init__(self):
         self.collection = 'user'
@@ -148,33 +147,39 @@ class User(IdSettings):
                 'mensagem': 'Usuários retornados com sucesso'}, 200
 
     def get_user_by_id(self, id):
-        
+
         user = self.entity_response(
             database.main[self.collection].find_one({'_id':  ObjectId(id)}))
         return user
-        
 
     def send_email(self, user):
-        user_db = database.main[self.collection].find_one({"email": user['email']})
+        user_db = database.main[self.collection].find_one(
+            {"email": user['email']})
         if not user_db:
             return {'resultado': "A conta com esse email não foi encontrada"}, 404
-        if user['numero'] != user_db['endereco']['numero'] and user['cep'] != user_db['endereco']['cep'] and user['cidade'] != user_db['endereco']['cidade'] and user['telefone'] != user_db['telefone']:
+        if user['numero'] != user_db['endereco']['numero'] or user['cep'] != user_db['endereco']['cep'] or user['cidade'] != user_db['endereco']['cidade'] or user['telefone'] != user_db['telefone']:
             return {'resultado': "Uma ou mais informações estão erradas"}, 401
+
+        message = """Content-Type: text/plain
+                    Subject: Redefinição de senha de Feira Kit
+                    Olá {nome}, a sua senha foi redefinida com sucesso, o seu novo login no aplicativo é
+                    usuário: {usuario} 
+                    Senha: {senha}
+                    Aviso: Esta é uma senha gerada automáticamente, recomendamos que Você faça a alteração da sua senha pelo aplicativo acessando 'Minha Conta' > 'Alterar Senha'
+                    att. Equipe Feira Kit 
+                    """.format(nome=user_db['nome'], usuario=user['email'], senha=senha).encode(encoding="utf-8", errors='strict')
 
         senha = str(secrets.token_hex(6))
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.login(var_env.email, var_env.senha)
-        server.sendmail(
-        var_env.email,
-        user['email'],
-        "use a seguinte senha para entrar na sua aplicacao: {}".format(senha))
+        server.sendmail(var_env.email, user['email'], message)
         server.quit()
-          
+
         user_db['senha'] = generate_password_hash(senha)
         my_query = {'email':  user['email']}
         new_values = {'$set': user_db}
         database.main[self.collection].update_one(my_query, new_values)
         return {'resultado': "email enviado"}, 201
 
-            
+
 user_service = User()

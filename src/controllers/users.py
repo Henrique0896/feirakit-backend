@@ -98,10 +98,9 @@ class ChangePassword(Resource):
 
 @api.route('/send_email')
 class SendEmailToUser(Resource):
-    @authenticate.jwt_required
     @api.doc(security='Bearer')
     @api.marshal_list_with(user_model.send_email_response)
     @api.expect(user_model.send_email_request, validate=True)
-    def post(self, current_user):
+    def post(self):
         result = user_service.send_email(api.payload)
         return result
