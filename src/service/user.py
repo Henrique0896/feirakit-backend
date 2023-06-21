@@ -162,10 +162,10 @@ class User(IdSettings):
 
         message = """Content-Type: text/plain
                     Subject: Redefinição de senha de Feira Kit
-                    Olá {nome}, a sua senha foi redefinida com sucesso, o seu novo login no aplicativo é
-                    usuário: {usuario} 
+                    Olá {nome}, a sua senha foi redefinida com sucesso, o seu novo login no aplicativo é:
+                    Usuário: {usuario} 
                     Senha: {senha}
-                    Aviso: Esta é uma senha gerada automáticamente, recomendamos que Você faça a alteração da sua senha pelo aplicativo acessando 'Minha Conta' > 'Alterar Senha'
+                    Aviso: Esta é uma senha gerada automaticamente, recomendamos que você faça a alteração da sua senha pelo aplicativo acessando 'Minha Conta' > 'Alterar Senha'.
                     att. Equipe Feira Kit 
                     """.format(nome=user_db['nome'], usuario=user['email'], senha=senha).encode(encoding="utf-8", errors='strict')
 
