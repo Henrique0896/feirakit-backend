@@ -73,7 +73,7 @@ class UserSeachByName(Resource):
         users = user_service.get_users_by_name(name,current_user)
         return users
 
-@api.route('/check-password')
+@api.route('/login')
 class CheckPassword(Resource):
     @api.expect(user_model.check_password_request, validate=True)
     @api.marshal_with(user_model.response_login_default)
