@@ -16,7 +16,7 @@ class Product(Resource):
         limit= request.args.get('limit',type=int ,default=10)
         sort= request.args.get('sort',type=int ,default=1)
         products = product_service.get(page,limit,sort)
-        return products, 200
+        return products
 
     @api.expect(product_model.request, validate=True)
     @authenticate.jwt_required
@@ -47,25 +47,34 @@ class ProductSeachById(Resource):
     @api.marshal_list_with(product_model.response)
     def get(self, id):
         products = product_service.get_one(id)
-        return products, 200
+        return products
         
 @api.route('/byname/<string:name>')
 class ProductSeachByName(Resource):
     @api.marshal_list_with(product_model.response)
     def get(self, name):
         products = product_service.get_products_by_name(name)
-        return products, 200
+        return products
 
 @api.route('/by-id-usuario/<string:id_usuario>')
 class ProductSeachByNameOfUsuario(Resource):
     @api.marshal_list_with(product_model.response)
     def get(self, id_usuario):
         products = product_service.get_products_by_id_usuario(id_usuario)
-        return products, 200
+        return products
 
 @api.route('/units')
 class GetUnity(Resource):
     @api.marshal_with(product_model.types_response)
     def get(self):
         product_types = product_service.get_product_types()
-        return product_types, 200
+        return product_types
+    
+@api.route('/get_cities')
+class GetCities(Resource):
+    @authenticate.jwt_required
+    @api.doc(security='Bearer')
+    @api.marshal_with(product_model.cities_response)
+    def get(self, current_user):
+        cities = product_service.get_cities()
+        return cities

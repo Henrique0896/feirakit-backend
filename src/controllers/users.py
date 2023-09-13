@@ -5,6 +5,8 @@ from src.models import user as user_model
 from src.models.id import id_request
 from src.service.user import user_service
 from src.core.authenticate import authenticate
+from src.core.var_env import var_env
+
 app, api = server.app, server.api.namespace('users',
                                             description='Recurso de usuários')
 
@@ -13,7 +15,7 @@ class User(Resource):
     @authenticate.jwt_required
     @api.doc(security='Bearer')
     @api.marshal_with(user_model.response)
-    def get(self,current_user):
+    def get(self, current_user):
         users = user_service.get()
         return users
 
@@ -93,3 +95,12 @@ class ChangePassword(Resource):
             api.payload['email'], api.payload['senha'], api.payload['nova_senha'], current_user)
 
         return valid_password
+
+@api.route('/send_email')
+class SendEmailToUser(Resource):
+    @api.doc(security='Bearer')
+    @api.marshal_list_with(user_model.send_email_response)
+    @api.expect(user_model.send_email_request, validate=True)
+    def post(self):
+        result = user_service.send_email(api.payload)
+        return result

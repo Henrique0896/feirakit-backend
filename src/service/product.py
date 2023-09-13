@@ -3,6 +3,7 @@ from src.program.database import database
 from src.service.id_settings import IdSettings
 from src.constants.products import categorias, unidades
 
+
 class Product(IdSettings):
     def __init__(self):
         self.collection = 'product'
@@ -11,7 +12,7 @@ class Product(IdSettings):
         skip = limit * (page - 1)
         products = list(database.main[self.collection].find().skip(
             skip).limit(limit).sort('_id', sort))
-        return self.entity_response_list(products)
+        return self.entity_response_list(products), 200
 
     def post(self, product, current_user):
         if product['produtor_id'] != current_user['id']:
@@ -44,7 +45,8 @@ class Product(IdSettings):
         }, 201
 
     def delete(self, id, current_user):
-        product = database.main[self.collection].find_one({'_id':  ObjectId(id)})
+        product = database.main[self.collection].find_one(
+            {'_id':  ObjectId(id)})
         if product['produtor_id'] != current_user['id']:
             return {
                 'resultado': False,
@@ -58,23 +60,45 @@ class Product(IdSettings):
         }, 200
 
     def get_one(self, id):
-        product = database.main[self.collection].find_one({'_id':  ObjectId(id)})
-        return self.entity_response(product)
+        product = database.main[self.collection].find_one(
+            {'_id':  ObjectId(id)})
+        return self.entity_response(product), 200
 
     def get_products_by_name(self, name):
         products = list(database.main[self.collection].find(
-            {'nome': {'$regex': name, '$options' : 'i'}}))
-        return self.entity_response_list(products)
+            {'nome': {'$regex': name, '$options': 'i'}}))
+        return self.entity_response_list(products), 200
 
     def get_products_by_id_usuario(self, id_usuario):
         products = list(database.main[self.collection].find(
             {'produtor_id': id_usuario}))
-        return self.entity_response_list(products)
+        return self.entity_response_list(products), 200
 
     def get_product_types(self):
         return {
             'unidades': unidades,
             'categorias': categorias
-        }
+        }, 200
 
-product_service = Product()
+    def get_cities(self):
+        users = list(database.main['user'].find({}, {"endereco.cidade": 1, "_id": 0}))
+      
+        cities = []
+
+        for user in users:
+             cities.append(user["endereco"]["cidade"])
+        
+        cities = list(set(cities))
+
+        resultado = []
+
+        for city in cities:
+             resultado.append({
+                 "nome": city
+             })
+
+        return {"resultado": resultado,
+                 "mensagem": "Sucesso"}, 200
+
+
+product_service=Product()
