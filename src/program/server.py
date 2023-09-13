@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_restx import Api
 from src.core.var_env import var_env
-from flask_mailman import Mail
-
 class Server():
     def __init__(self):
         self.app = Flask(__name__)
