@@ -1,11 +1,6 @@
 ### Developed by:
-Squad Vale
+Associação Fundo Social Vale do Jequitinhonha - FSVJ
 </br>
-
-<i>Project encouraged by the Associação Fundo Social Vale do Jequitinhonha - FSVJ
-</br>2022</i>
-
-### Settings
 
 #### Install these packages, case you don't already have it
 Download python 3 then:
@@ -26,6 +21,6 @@ pip install -r requirements.txt
 ```
 #### Run the project
 ```shell
-py main.py
+py app.py
 ```
 </br>
